@@ -239,9 +239,12 @@ function pushbutton7_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 %h = uicontrol('Style','text','String','','Position',[200 20 200 420]);
-
-global path;
-a=imfinfo(path);
+global Im1;
+if (handles.jil==2)
+    %delete(h);
+    filename=handles.filename;
+Im1 =imread(filename);
+a=imfinfo(filename);
 a=struct2cell(a);
 g=size(a);
 g(1,1)
@@ -258,6 +261,13 @@ handles.h=h;
 guidata(hObject,handles);
 handles.jil=1;
 guidata(hObject,handles);
+else
+
+delete(handles.h);
+handles.jil=2;
+guidata(hObject,handles);
+
+end
 
 
 % --- Executes on button press in radiobutton2.
@@ -281,30 +291,3 @@ function pushbutton9_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton9 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global Im1;
-
-img1 = Im1(:,:,1);
-img2 = Im1(:,:,2);
-img3 = Im1(:,:,3);
-
-img1 =imadjust(img1);
-img1 = histeq(img1);
-img1 = adapthisteq(img1);
-
-
-img2 =imadjust(img2);
-img2 = histeq(img2);
-img2 = adapthisteq(img2);
-
-img3 =imadjust(img3);
-img3 = histeq(img3);
-img3 = adapthisteq(img3);
-
-img4 =Im1;
-img4(:,:,1) =img1;
-img4(:,:,2) =img2;
-img4(:,:,3) =img3;
-imshow(img4);
-
-
-
