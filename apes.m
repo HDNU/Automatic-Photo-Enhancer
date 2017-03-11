@@ -22,7 +22,7 @@ function varargout = apes(varargin)
 
 % Edit the above text to modify the response to help apes
 
-% Last Modified by GUIDE v2.5 11-Mar-2017 16:52:45
+% Last Modified by GUIDE v2.5 11-Mar-2017 19:01:33
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -328,6 +328,124 @@ function slider2_Callback(hObject, eventdata, handles)
 % --- Executes during object creation, after setting all properties.
 function slider2_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to slider2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+
+
+
+
+
+
+
+
+% --- Executes on slider movement.
+function slider9_Callback(hObject, eventdata, handles)
+% hObject    handle to slider9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global Im1;
+val = get(hObject,'Value')
+filtered1 = Im1(:,:,1);
+filtered2 = Im1(:,:,2);
+filtered3 = Im1(:,:,3);
+sigma =(val)+1
+Gauss =fspecial('gaussian',[5 5],sigma);
+filtered1 =imfilter(filtered1,Gauss,'same');
+filtered2 =imfilter(filtered2,Gauss,'same');
+filtered3 =imfilter(filtered3,Gauss,'same');
+filtered = Im1;
+filtered(:,:,1) =filtered1;
+filtered(:,:,2) =filtered2;
+filtered(:,:,3) =filtered3;
+imshow(filtered)
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider9_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function slider10_Callback(hObject, eventdata, handles)
+% hObject    handle to slider10 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global Im1;
+val = get(hObject,'Value')
+filtered1 = Im1(:,:,1);
+filtered2 = Im1(:,:,2);
+filtered3 = Im1(:,:,3);
+num =int64(val*10)+1;
+filtered1 =medfilt2(filtered1,[num num]);
+filtered2 =medfilt2(filtered2,[num num]);
+filtered3 =medfilt2(filtered3,[num num]);
+filtered = Im1;
+filtered(:,:,1) =filtered1;
+filtered(:,:,2) =filtered2;
+filtered(:,:,3) =filtered3;
+imshow(filtered)
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider10_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider10 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function slider11_Callback(hObject, eventdata, handles)
+% hObject    handle to slider11 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global Im1;
+val = get(hObject,'Value')
+filtered1 = Im1(:,:,1);
+filtered2 = Im1(:,:,2);
+filtered3 = Im1(:,:,3);
+sigma =(val)+1
+Gauss =fspecial('gaussian',[5 5],sigma);
+filtered1 =imfilter(filtered1,Gauss,'same');
+filtered2 =imfilter(filtered2,Gauss,'same');
+filtered3 =imfilter(filtered3,Gauss,'same');
+filtered1 = (1+val)*(Im1(:,:,1))- val*(filtered1);
+filtered2 = (1+val)*(Im1(:,:,2))- val*(filtered2);
+filtered3 = (1+val)*(Im1(:,:,3))- val*(filtered3);
+filtered = Im1;
+filtered(:,:,1) =filtered1;
+filtered(:,:,2) =filtered2;
+filtered(:,:,3) =filtered3;
+imshow(filtered)
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider11_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider11 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
