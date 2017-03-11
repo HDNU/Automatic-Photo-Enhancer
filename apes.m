@@ -22,7 +22,7 @@ function varargout = apes(varargin)
 
 % Edit the above text to modify the response to help apes
 
-% Last Modified by GUIDE v2.5 11-Mar-2017 21:49:08
+% Last Modified by GUIDE v2.5 11-Mar-2017 22:20:42
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -86,12 +86,13 @@ function selectPicture_Callback(hObject, eventdata, handles)
 %  imshow(I);
 global path;
 [path, Cancel] = imgetfile();
-global Im1;
+global Im1 duplicate;
 if Cancel
     msgbox(sprintf('Error'),'Error','Error');
     return
 end
 Im1 = imread(path);
+duplicate =Im1;
 Im1 = im2double(Im1);
 
 axes(handles.axesImage)
@@ -463,7 +464,7 @@ val = get(hObject,'Value');
 filtered1 = Im1(:,:,1);
 filtered2 = Im1(:,:,2);
 filtered3 = Im1(:,:,3);
-gamma = 0.9 + val/5
+gamma = 0.9 + val/5;
 c = 1/(1.0^gamma);
 
 filtered1 =255.0*c*((filtered1/255.0).^gamma);
@@ -486,6 +487,48 @@ imhist(filtered(:,:,1));
 % --- Executes during object creation, after setting all properties.
 function slider12_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to slider12 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function slider13_Callback(hObject, eventdata, handles)
+% hObject    handle to slider13 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global  duplicate;
+C = (get(hObject,'Value')*510)-255;
+
+filtered1 = duplicate(:,:,1);
+filtered2 = duplicate(:,:,2);
+filtered3 = duplicate(:,:,3);
+
+F =(259*(C+255))/(255*(259-C));
+
+filtered1 =uint8(F*(filtered1-128)+128);
+filtered2 =uint8(F*(filtered2-128)+128);
+filtered3 =uint8(F*(filtered3-128)+128);
+
+filtered = duplicate;
+filtered(:,:,1) =filtered1;
+filtered(:,:,2) =filtered2;
+filtered(:,:,3) =filtered3;
+axes(handles.axesImage);
+imshow(filtered)
+axes(handles.axes2);
+imhist(filtered(:,:,1));
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider13_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider13 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
