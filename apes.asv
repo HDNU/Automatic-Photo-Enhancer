@@ -478,7 +478,6 @@ axes(handles.axesImage);
 imshow(filtered)
 axes(handles.axes2);
 imhist(filtered(:,:,1));
-
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
