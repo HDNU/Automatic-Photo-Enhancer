@@ -22,7 +22,7 @@ function varargout = apes(varargin)
 
 % Edit the above text to modify the response to help apes
 
-% Last Modified by GUIDE v2.5 11-Mar-2017 22:20:42
+% Last Modified by GUIDE v2.5 11-Mar-2017 23:11:03
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -362,6 +362,9 @@ filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 axes(handles.axesImage);
 imshow(filtered)
+axes(handles.axes2);
+imhist(filtered(:,:,1));
+set(handles.text10, 'String', 'Histogram');
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
@@ -398,6 +401,9 @@ filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 axes(handles.axesImage);
 imshow(filtered)
+axes(handles.axes2);
+imhist(filtered(:,:,1));
+set(handles.text10, 'String', 'Histogram');
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
@@ -438,6 +444,9 @@ filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 axes(handles.axesImage);
 imshow(filtered)
+axes(handles.axes2);
+imhist(filtered(:,:,1));
+set(handles.text10, 'String', 'Histogram');
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
@@ -479,7 +488,7 @@ axes(handles.axesImage);
 imshow(filtered)
 axes(handles.axes2);
 imhist(filtered(:,:,1));
-
+set(handles.text10, 'String', 'Histogram');
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
@@ -522,6 +531,7 @@ axes(handles.axesImage);
 imshow(filtered)
 axes(handles.axes2);
 imhist(filtered(:,:,1));
+set(handles.text10, 'String', 'Histogram');
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
@@ -536,3 +546,31 @@ function slider13_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+
+
+% --- Executes on button press in pushbutton11.
+function pushbutton11_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton11 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global duplicate
+axes(handles.axesImage);
+imshow(duplicate);
+crop = imcrop(duplicate);
+axes(handles.axes2);
+imshow(crop);
+set(handles.text10, 'String', 'Cropped Image');
+
+
+% --- Executes during object creation, after setting all properties.
+function text8_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to text8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes during object creation, after setting all properties.
+function text10_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to text10 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
