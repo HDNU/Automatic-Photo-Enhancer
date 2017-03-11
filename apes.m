@@ -22,7 +22,7 @@ function varargout = apes(varargin)
 
 % Edit the above text to modify the response to help apes
 
-% Last Modified by GUIDE v2.5 11-Mar-2017 10:36:42
+% Last Modified by GUIDE v2.5 11-Mar-2017 14:10:03
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -92,4 +92,196 @@ function selectPicture_Callback(hObject, eventdata, handles)
         '*.*',  'All Files (*.*)'}, ...
         'Pick a photo');
  axes(handles.axesImage)
- imshow([Path_Name,File_Name])
+ 
+ filename=File_Name;
+handles.filename=filename;
+boole = true;
+handles.boole=boole;
+
+handles.jil=2;
+ guidata(hObject,handles);
+imshow(filename)
+ 
+ function pushbutton2_Callback(hObject, eventdata, handles)
+filename=handles.filename;
+Im1 =imread(filename);
+Im1(:,:,2)=0;
+Im1(:,:,3)=0;
+
+imshow(Im1);
+% hObject    handle to pushbutton2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+function pushbutton3_Callback(hObject, eventdata, handles)
+filename=handles.filename;
+Im1 =imread(filename);
+Im2=rgb2gray(Im1);
+Im2=histeq(Im2,64);
+
+imshow(Im2);
+
+
+% --- Executes on button press in pushbutton4.
+function pushbutton4_Callback(hObject, eventdata, handles)
+filename=handles.filename;
+Im1 =imread(filename);
+Im2=rgb2gray(Im1);
+Im2=imsharpen(Im2);
+
+imshow(Im2);
+% hObject    handle to pushbutton4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton5.
+function pushbutton5_Callback(hObject, eventdata, handles)
+% h = uicontrol('Style','text','String','Hello world','Position',[200 420 100 20]);
+filename=handles.filename;
+% MultiSlider
+Im1 =imread(filename);
+    %Split into RGB Channels
+    Red = Im1(:,:,1);
+    Green =Im1(:,:,2);
+    Blue = Im1(:,:,3);
+
+    %Get histValues for each channel
+    [yRed, x] = imhist(Red);
+    [yGreen, x] = imhist(Green);
+    [yBlue, x] = imhist(Blue);
+
+    %Plot them together in one plot
+    plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
+% hObject    handle to pushbutton5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on slider movement.
+function slider1_Callback(hObject, eventdata, handles)
+a = get(hObject,'Value');
+filename=handles.filename;
+Im1 =imread(filename);
+Im2=rgb2gray(Im1);
+Im2=Im2*a;
+% ImMax=double(max(max(Im2)));
+% ImMin=double(min(min(Im2)));
+% Im2 = ((Im2-ImMin)/(ImMax-ImMin))*a*255;
+
+imshow(Im2);
+% hObject    handle to slider1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+
+
+
+
+
+
+% --------------------------------------------------------------------
+
+% hObject    handle to uitoggletool2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on key press with focus on slider1 and none of its controls.
+
+% hObject    handle to slider1 (see GCBO)
+% eventdata  structure with the following fields (see UICONTROL)
+%	Key: name of the key that was pressed, in lower case
+%	Character: character interpretation of the key(s) that was pressed
+%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
+% handles    structure with handles and user data (see GUIDATA)
+
+
+
+function edit2_Callback(hObject, eventdata, handles)
+% hObject    handle to edit2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit2 as text
+%        str2double(get(hObject,'String')) returns contents of edit2 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+%string1 = sprintf('Dynamic');
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+
+
+
+% --- Executes on button press in pushbutton7.
+function pushbutton7_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+%h = uicontrol('Style','text','String','','Position',[200 20 200 420]);
+if (handles.jil==2)
+    %delete(h);
+    filename=handles.filename;
+Im1 =imread(filename);
+a=imfinfo(filename);
+a=struct2cell(a);
+g=size(a);
+g(1,1)
+d='';
+Datapack={'Filename','FileModDate','FileSize','FileFormat','version','Width','Height','Depth','ColorType'};
+for k=1:8
+    
+qe=strcat(Datapack(k),':',a(k));
+d=[d  char(10)'  qe];
+end
+
+h = uicontrol('Style','text','String',d,'Position',[200 20 200 420]);
+handles.h=h;
+guidata(hObject,handles);
+handles.jil=1;
+guidata(hObject,handles);
+else
+
+delete(handles.h);
+handles.jil=2;
+guidata(hObject,handles);
+
+end
+
+
+% --- Executes on button press in radiobutton2.
+
+% hObject    handle to radiobutton2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton2
