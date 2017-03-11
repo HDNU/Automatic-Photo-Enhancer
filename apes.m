@@ -22,7 +22,7 @@ function varargout = apes(varargin)
 
 % Edit the above text to modify the response to help apes
 
-% Last Modified by GUIDE v2.5 11-Mar-2017 15:18:41
+% Last Modified by GUIDE v2.5 11-Mar-2017 16:52:45
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -248,12 +248,17 @@ g(1,1)
 d='';
 Datapack={'Filename','FileModDate','FileSize','FileFormat','version','Width','Height','Depth','ColorType'};
 for k=1:8
-    
-qe=strcat(Datapack(k),':',a(k));
+word = a(k);
+word = word{1};
+isnumeric(word)
+if(isnumeric(word))
+    word = int2str(word);
+end
+qe=strcat(Datapack(k),':',word)
 d=[d  char(10)'  qe];
 end
 
-h = uicontrol('Style','text','String',d,'Position',[200 20 200 420]);
+h = uicontrol('Style','text','String',d,'Position',[650 10 200 470]);
 handles.h=h;
 guidata(hObject,handles);
 handles.jil=1;
@@ -308,3 +313,25 @@ imshow(img4);
 
 
 
+
+
+% --- Executes on slider movement.
+function slider2_Callback(hObject, eventdata, handles)
+% hObject    handle to slider2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
