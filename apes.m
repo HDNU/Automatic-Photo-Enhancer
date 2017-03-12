@@ -490,7 +490,11 @@ filtered(:,:,3) =filtered3;
 axes(handles.axesImage);
 imshow(filtered)
 axes(handles.axes2);
-imhist(filtered(:,:,1));
+[yRed, x] = imhist(filtered(:,:,1));
+[yGreen, x] = imhist(filtered(:,:,2));
+[yBlue, x] = imhist(filtered(:,:,3));
+%Plot them together in one plot
+plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
 set(handles.text10, 'String', 'Histogram');
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
