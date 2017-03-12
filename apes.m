@@ -22,7 +22,7 @@ function varargout = apes(varargin)
 
 % Edit the above text to modify the response to help apes
 
-% Last Modified by GUIDE v2.5 11-Mar-2017 23:11:03
+% Last Modified by GUIDE v2.5 12-Mar-2017 09:24:39
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -572,5 +572,30 @@ function text8_CreateFcn(hObject, eventdata, handles)
 % --- Executes during object creation, after setting all properties.
 function text10_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to text10 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes on button press in pushbutton13.
+function pushbutton13_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton13 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+[FileName,saves] = uiputfile('*jpg', 'Save As');
+% 
+% if Cancel
+%     msgbox(sprintf('Error'),'Error','Error');
+%     return
+% end
+frame = getframe(handles.axesImage);
+im = frame2im(frame);
+saves =strcat(saves,FileName)
+saves =strcat(saves,'.jpg')
+
+imwrite(im, saves,'jpg')
+% --- Executes during object creation, after setting all properties.
+function selectPicture_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to selectPicture (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
