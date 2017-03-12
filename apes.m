@@ -476,6 +476,7 @@ filtered1 = Im1(:,:,1);
 filtered2 = Im1(:,:,2);
 filtered3 = Im1(:,:,3);
 gamma = 0.9 + val/5;
+
 c = 1/(1.0^gamma);
 
 filtered1 =255.0*c*((filtered1/255.0).^gamma);
@@ -513,7 +514,8 @@ function slider13_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global  duplicate;
-C = (get(hObject,'Value')*510)-255;
+C = (get(hObject,'Value')*256)-128;
+
 
 filtered1 = duplicate(:,:,1);
 filtered2 = duplicate(:,:,2);
@@ -532,7 +534,11 @@ filtered(:,:,3) =filtered3;
 axes(handles.axesImage);
 imshow(filtered)
 axes(handles.axes2);
-imhist(filtered(:,:,1));
+[yRed, x] = imhist(filtered(:,:,1));
+[yGreen, x] = imhist(filtered(:,:,2));
+[yBlue, x] = imhist(filtered(:,:,3));
+%Plot them together in one plot
+plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
 set(handles.text10, 'String', 'Histogram');
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
@@ -585,11 +591,11 @@ function pushbutton13_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 [FileName,saves] = uiputfile('*jpg', 'Save As');
-% 
-% if Cancel
-%     msgbox(sprintf('Error'),'Error','Error');
-%     return
-% end
+if (saves==0)
+    msgbox(sprintf('Specify The File Name'),'Error','Error');
+    return
+end
+
 frame = getframe(handles.axesImage);
 im = frame2im(frame);
 saves =strcat(saves,FileName);

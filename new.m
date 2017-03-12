@@ -1,9 +1,9 @@
 clear all 
 close all
 
-a = imread('image1.jpg');
+a = imread('lenna.jpg');
 %C = get(hObject,'Value')/10;
-C=255;
+C=128;
 filtered1 = a(:,:,1);
 filtered2 = a(:,:,2);
 filtered3 = a(:,:,3);
