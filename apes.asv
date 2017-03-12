@@ -356,24 +356,16 @@ function slider9_Callback(hObject, eventdata, handles)
 global Im1 sze;
 val = get(hObject,'Value');
 filtered1 = Im1(:,:,1);
-sigma =(val)+1;
-Gauss =fspecial('gaussian',[5 5],sigma);
-filtered1 =imfilter(filtered1,Gauss,'same');
-
-filtered = Im1;
-filtered(:,:,1) =filtered1;
-
-if(sze==3)
 filtered2 = Im1(:,:,2);
 filtered3 = Im1(:,:,3);
 
+filtered1 =imfilter(filtered1,Gauss,'same');
 filtered2 =imfilter(filtered2,Gauss,'same');
 filtered3 =imfilter(filtered3,Gauss,'same');
-
+filtered = Im1;
+filtered(:,:,1) =filtered1;
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
-end
-
 axes(handles.axesImage);
 imshow(filtered)
 axes(handles.axes2);
@@ -400,24 +392,19 @@ function slider10_Callback(hObject, eventdata, handles)
 % hObject    handle to slider10 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global Im1 sze;
+global Im1;
 val = get(hObject,'Value');
 filtered1 = Im1(:,:,1);
-num =int64(val*10)+1;
-filtered1 =medfilt2(filtered1,[num num]);
-
-filtered = Im1;
-filtered(:,:,1) =filtered1;
-if(sze==3)
 filtered2 = Im1(:,:,2);
 filtered3 = Im1(:,:,3);
-
+num =int64(val*10)+1;
+filtered1 =medfilt2(filtered1,[num num]);
 filtered2 =medfilt2(filtered2,[num num]);
 filtered3 =medfilt2(filtered3,[num num]);
-
+filtered = Im1;
+filtered(:,:,1) =filtered1;
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
-end
 axes(handles.axesImage);
 imshow(filtered)
 axes(handles.axes2);
@@ -444,29 +431,23 @@ function slider11_Callback(hObject, eventdata, handles)
 % hObject    handle to slider11 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global Im1 sze;
+global Im1;
 val = get(hObject,'Value');
 filtered1 = Im1(:,:,1);
+filtered2 = Im1(:,:,2);
+filtered3 = Im1(:,:,3);
 sigma =(val)+1;
 Gauss =fspecial('gaussian',[5 5],sigma);
 filtered1 =imfilter(filtered1,Gauss,'same');
-filtered1 = (1+val)*(Im1(:,:,1))- val*(filtered1);
-
-filtered = Im1;
-filtered(:,:,1) =filtered1;
-if(sze==3)
-filtered2 = Im1(:,:,2);
-filtered3 = Im1(:,:,3);
-
 filtered2 =imfilter(filtered2,Gauss,'same');
 filtered3 =imfilter(filtered3,Gauss,'same');
-
+filtered1 = (1+val)*(Im1(:,:,1))- val*(filtered1);
 filtered2 = (1+val)*(Im1(:,:,2))- val*(filtered2);
 filtered3 = (1+val)*(Im1(:,:,3))- val*(filtered3);
-
+filtered = Im1;
+filtered(:,:,1) =filtered1;
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
-end
 axes(handles.axesImage);
 imshow(filtered)
 axes(handles.axes2);
@@ -493,28 +474,23 @@ function slider12_Callback(hObject, eventdata, handles)
 % hObject    handle to slider12 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global Im1 sze;
+global Im1;
 val = get(hObject,'Value');
 filtered1 = Im1(:,:,1);
+filtered2 = Im1(:,:,2);
+filtered3 = Im1(:,:,3);
 gamma = 0.9 + val/5;
 
 c = 1/(1.0^gamma);
 
 filtered1 =255.0*c*((filtered1/255.0).^gamma);
-
-filtered = Im1;
-filtered(:,:,1) =filtered1;
-if(sze==3)
-filtered2 = Im1(:,:,2);
-filtered3 = Im1(:,:,3);
-
 filtered2 =255.0*c*((filtered2/255.0).^gamma);
 filtered3 =255.0*c*((filtered3/255.0).^gamma);
 
-
+filtered = Im1;
+filtered(:,:,1) =filtered1;
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
-end
 axes(handles.axesImage);
 imshow(filtered)
 axes(handles.axes2);
@@ -545,28 +521,24 @@ function slider13_Callback(hObject, eventdata, handles)
 % hObject    handle to slider13 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global  duplicate sze;
+global  duplicate;
 C = (get(hObject,'Value')*256)-128;
 
 
 filtered1 = duplicate(:,:,1);
-F =(259*(C+255))/(255*(259-C));
-
-filtered1 =uint8(F*(filtered1-128)+128);
-filtered = duplicate;
-filtered(:,:,1) =filtered1;
-if(sze==3)
 filtered2 = duplicate(:,:,2);
 filtered3 = duplicate(:,:,3);
 
+F =(259*(C+255))/(255*(259-C));
 
+filtered1 =uint8(F*(filtered1-128)+128);
 filtered2 =uint8(F*(filtered2-128)+128);
 filtered3 =uint8(F*(filtered3-128)+128);
 
-
+filtered = duplicate;
+filtered(:,:,1) =filtered1;
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
-end
 axes(handles.axesImage);
 imshow(filtered)
 axes(handles.axes2);
