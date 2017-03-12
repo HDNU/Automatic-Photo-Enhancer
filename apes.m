@@ -22,16 +22,16 @@ function varargout = apes(varargin)
 
 % Edit the above text to modify the response to help apes
 
-% Last Modified by GUIDE v2.5 11-Mar-2017 16:52:45
+% Last Modified by GUIDE v2.5 11-Mar-2017 22:03:10
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
-                   'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @apes_OpeningFcn, ...
-                   'gui_OutputFcn',  @apes_OutputFcn, ...
-                   'gui_LayoutFcn',  [] , ...
-                   'gui_Callback',   []);
+    'gui_Singleton',  gui_Singleton, ...
+    'gui_OpeningFcn', @apes_OpeningFcn, ...
+    'gui_OutputFcn',  @apes_OutputFcn, ...
+    'gui_LayoutFcn',  [] , ...
+    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
     gui_State.gui_Callback = str2func(varargin{1});
 end
@@ -51,9 +51,9 @@ function apes_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to apes (see VARARGIN)
- I = imread('default.jpg');
- axes(handles.axesImage);
- imshow(I);
+I = imread('default.jpg');
+axes(handles.axesImage);
+imshow(I);
 
 % Choose default command line output for apes
 handles.output = hObject;
@@ -66,7 +66,7 @@ guidata(hObject, handles);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = apes_OutputFcn(hObject, eventdata, handles) 
+function varargout = apes_OutputFcn(hObject, eventdata, handles)
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -96,9 +96,9 @@ Im1 = im2double(Im1);
 
 axes(handles.axesImage)
 imshow(Im1)
- 
- function pushbutton2_Callback(hObject, eventdata, handles)
- global Im1;
+
+function pushbutton2_Callback(hObject, eventdata, handles)
+global Im1;
 Im2 =Im1;
 Im2(:,:,2)=0;
 Im2(:,:,3)=0;
@@ -132,18 +132,18 @@ function pushbutton5_Callback(hObject, eventdata, handles)
 global Im1;
 % MultiSlider
 
-    %Split into RGB Channels
-    Red = Im1(:,:,1);
-    Green =Im1(:,:,2);
-    Blue = Im1(:,:,3);
+%Split into RGB_to_HSV Channels
+Red = Im1(:,:,1);
+Green =Im1(:,:,2);
+Blue = Im1(:,:,3);
 
-    %Get histValues for each channel
-    [yRed, x] = imhist(Red);
-    [yGreen, x] = imhist(Green);
-    [yBlue, x] = imhist(Blue);
+%Get histValues for each channel
+[yRed, x] = imhist(Red);
+[yGreen, x] = imhist(Green);
+[yBlue, x] = imhist(Blue);
 
-    %Plot them together in one plot
-    plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
+%Plot them together in one plot
+plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
 % hObject    handle to pushbutton5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -248,14 +248,14 @@ g(1,1)
 d='';
 Datapack={'Filename','FileModDate','FileSize','FileFormat','version','Width','Height','Depth','ColorType'};
 for k=1:8
-word = a(k);
-word = word{1};
-isnumeric(word)
-if(isnumeric(word))
-    word = int2str(word);
-end
-qe=strcat(Datapack(k),':',word)
-d=[d  char(10)'  qe];
+    word = a(k);
+    word = word{1};
+    isnumeric(word)
+    if(isnumeric(word))
+        word = int2str(word);
+    end
+    qe=strcat(Datapack(k),':',word)
+    d=[d  char(10)'  qe];
 end
 
 h = uicontrol('Style','text','String',d,'Position',[650 10 200 470]);
@@ -334,4 +334,256 @@ function slider2_CreateFcn(hObject, eventdata, handles)
 % Hint: slider controls usually have a light gray background.
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+
+%-------------------------------------------------------------This section carry color profile settings for raw images-------------------------------------
+
+% --- Executes on button press in RGB_to_HSV.
+function RGB_to_HSV_Callback(hObject, eventdata, handles)
+% hObject    handle to RGB_to_HSV (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of RGB_to_HSV
+global Im1;
+i1 = Im1;
+hcsc = vision.ColorSpaceConverter;
+handles.radio1=get(hObject,'Value');
+if handles.radio1
+    try
+        hcsc.Conversion = 'RGB to HSV';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    axes(handles.axesImage);
+    imshow(Im1);
+    
+end
+
+
+
+% --- Executes on button press in RGB_to_YCbCr.
+function RGB_to_YCbCr_Callback(hObject, eventdata, handles)
+% hObject    handle to RGB_to_YCbCr (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of RGB_to_YCbCr
+global Im1;
+i1 = Im1;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    try
+        hcsc.Conversion = 'RGB to YCbCr';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
+
+
+% --- Executes on button press in YCbCr_to_RGB.
+function YCbCr_to_RGB_Callback(hObject, eventdata, handles)
+% hObject    handle to YCbCr_to_RGB (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of YCbCr_to_RGB
+global Im1;
+i1 = Im1;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    try
+        hcsc.Conversion = 'YCbCr to RGB]';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
+
+
+% --- Executes on button press in RGB_to_intensity.
+function RGB_to_intensity_Callback(hObject, eventdata, handles)
+% hObject    handle to RGB_to_intensity (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of RGB_to_intensity
+global Im1;
+i1 = Im1;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    try
+        hcsc.Conversion = 'RGB to intensity';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
+
+
+% --- Executes on button press in HSV_to_RGB.
+function HSV_to_RGB_Callback(hObject, eventdata, handles)
+% hObject    handle to HSV_to_RGB (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of HSV_to_RGB
+global Im1;
+i1 = Im1;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    try
+        hcsc.Conversion = 'HSV to RGB';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
+
+
+% --- Executes on button press in Default.
+function Default_Callback(hObject, eventdata, handles)
+% hObject    handle to Default (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of Default
+global Im1;
+axes(handles.axesImage);
+imshow(Im1);
+
+
+% --- Executes on button press in XYZ_to_sRGB.
+function XYZ_to_sRGB_Callback(hObject, eventdata, handles)
+% hObject    handle to XYZ_to_sRGB (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of XYZ_to_sRGB
+global Im1;
+i1 = Im1;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    try
+        hcsc.Conversion = 'XYZ to sRGB';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
+
+
+% --- Executes on button press in sRGB_to_XYZ.
+function sRGB_to_XYZ_Callback(hObject, eventdata, handles)
+% hObject    handle to sRGB_to_XYZ (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of sRGB_to_XYZ
+global Im1;
+i1 = Im1;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    try
+        hcsc.Conversion = 'sRGB to XYZ';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
+
+
+% --- Executes on button press in sRGB_to_Lab.
+function sRGB_to_Lab_Callback(hObject, eventdata, handles)
+% hObject    handle to sRGB_to_Lab (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of sRGB_to_Lab
+global Im1;
+i1 = Im1;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    try
+        hcsc.Conversion = 'sRGB to L*a*b*';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
+
+
+% --- Executes on button press in Lab_to_sRGB.
+function Lab_to_sRGB_Callback(hObject, eventdata, handles)
+% hObject    handle to Lab_to_sRGB (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of Lab_to_sRGB
+global Im1;
+i1 = Im1;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    try
+        hcsc.Conversion = 'L*a*b* to sRGB';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
 end
