@@ -550,18 +550,15 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
 end
 
 
-% --- Executes on button press in pushbutton11.
-function pushbutton11_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton11 (see GCBO)
+% --- Executes on button press in cropPushbutton.
+function cropPushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to cropPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global duplicate
+global Im1;
+croppedImage = imcrop(Im1);
 axes(handles.axesImage);
-imshow(duplicate);
-crop = imcrop(duplicate);
-axes(handles.axes2);
-imshow(crop);
-set(handles.text10, 'String', 'Cropped Image');
+imshow(croppedImage);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -704,3 +701,17 @@ function vignetteMidpointSlider_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+
+
+% --- Executes on button press in undoLastEditsPushbutton.
+function undoLastEditsPushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to undoLastEditsPushbutton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in revert2originalPushbutton.
+function revert2originalPushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to revert2originalPushbutton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
