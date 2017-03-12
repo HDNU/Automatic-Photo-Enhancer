@@ -22,11 +22,6 @@ function varargout = apes(varargin)
 
 % Edit the above text to modify the response to help apes
 
-<<<<<<< HEAD
-% Last Modified by GUIDE v2.5 12-Mar-2017 09:24:39
-=======
-% Last Modified by GUIDE v2.5 12-Mar-2017 09:48:31
->>>>>>> origin/master
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -251,17 +246,17 @@ global path;
 a=imfinfo(path);
 a=struct2cell(a);
 g=size(a);
-g(1,1)
+g(1,1);
 d='';
 Datapack={'Filename','FileModDate','FileSize','FileFormat','version','Width','Height','Depth','ColorType'};
 for k=1:8
 word = a(k);
 word = word{1};
-isnumeric(word)
+
 if(isnumeric(word))
     word = int2str(word);
 end
-qe=strcat(Datapack(k),':',word)
+qe=strcat(Datapack(k),':',word);
 d=[d  char(10)'  qe];
 end
 
@@ -351,11 +346,11 @@ function slider9_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global Im1;
-val = get(hObject,'Value')
+val = get(hObject,'Value');
 filtered1 = Im1(:,:,1);
 filtered2 = Im1(:,:,2);
 filtered3 = Im1(:,:,3);
-sigma =(val)+1
+sigma =(val)+1;
 Gauss =fspecial('gaussian',[5 5],sigma);
 filtered1 =imfilter(filtered1,Gauss,'same');
 filtered2 =imfilter(filtered2,Gauss,'same');
@@ -391,7 +386,7 @@ function slider10_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global Im1;
-val = get(hObject,'Value')
+val = get(hObject,'Value');
 filtered1 = Im1(:,:,1);
 filtered2 = Im1(:,:,2);
 filtered3 = Im1(:,:,3);
@@ -430,11 +425,11 @@ function slider11_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global Im1;
-val = get(hObject,'Value')
+val = get(hObject,'Value');
 filtered1 = Im1(:,:,1);
 filtered2 = Im1(:,:,2);
 filtered3 = Im1(:,:,3);
-sigma =(val)+1
+sigma =(val)+1;
 Gauss =fspecial('gaussian',[5 5],sigma);
 filtered1 =imfilter(filtered1,Gauss,'same');
 filtered2 =imfilter(filtered2,Gauss,'same');
@@ -580,7 +575,6 @@ function text10_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 
 
-<<<<<<< HEAD
 % --- Executes on button press in pushbutton13.
 function pushbutton13_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton13 (see GCBO)
@@ -595,8 +589,8 @@ function pushbutton13_Callback(hObject, eventdata, handles)
 % end
 frame = getframe(handles.axesImage);
 im = frame2im(frame);
-saves =strcat(saves,FileName)
-saves =strcat(saves,'.jpg')
+saves =strcat(saves,FileName);
+saves =strcat(saves,'.jpg');
 
 imwrite(im, saves,'jpg')
 % --- Executes during object creation, after setting all properties.
@@ -604,47 +598,6 @@ function selectPicture_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to selectPicture (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-=======
-% --- Executes on slider movement.
-function vignetteAmountSlider_Callback(hObject, eventdata, handles)
-% hObject    handle to vignetteAmountSlider (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'Value') returns position of slider
-%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
-
-% --- Executes during object creation, after setting all properties.
-function vignetteAmountSlider_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to vignetteAmountSlider (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: slider controls usually have a light gray background.
-if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
-end
-
 
 % --- Executes on slider movement.
-function vignetteMidpointSlider_Callback(hObject, eventdata, handles)
-% hObject    handle to vignetteMidpointSlider (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% Hints: get(hObject,'Value') returns position of slider
-%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
-
-% --- Executes during object creation, after setting all properties.
-function vignetteMidpointSlider_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to vignetteMidpointSlider (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: slider controls usually have a light gray background.
-if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
-end
->>>>>>> origin/master
