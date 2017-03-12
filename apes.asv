@@ -83,9 +83,6 @@ function selectPicture_Callback(hObject, eventdata, handles)
 % hObject    handle to selectPicture (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-%  I = imread('image1.jpg');
-%  axes(handles.axesImage);
-%  imshow(I);
 global path sze;
 [path, Cancel] = imgetfile();
 global originalImage duplicate;
@@ -751,14 +748,14 @@ function slider16_Callback(hObject, eventdata, handles)
 % hObject    handle to slider16 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global Im1;
+global originalImage;
 estimated_noise  = get(hObject,'Value')/50;
 
 LEN = 21;
 THETA = 11;
 PSF = fspecial('motion', LEN, THETA);
 
-wnr3 = deconvwnr(Im1, PSF, estimated_noise);
+wnr3 = deconvwnr(originalImage, PSF, estimated_noise);
 axes(handles.axesImage);
 imshow(wnr3)
 % Hints: get(hObject,'Value') returns position of slider
@@ -782,9 +779,9 @@ function Rivert2OriginalPushbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to Rivert2OriginalPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global Im1;
+global originalImage;
 axes(handles.axesImage);
-imshow(Im1);
+imshow(originalImage);
 
 
 % --- Executes on button press in UndoLastEditPushbutton.
