@@ -601,3 +601,103 @@ function selectPicture_CreateFcn(hObject, eventdata, handles)
 
 % --- Executes on slider movement.
 
+
+
+% --- Executes on slider movement.
+function vignetteAmountSlider_Callback(hObject, eventdata, handles)
+% hObject    handle to vignetteAmountSlider (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+global Im1 vignetteAmount vignetteMidpoint;
+vignetteAmount = get(hObject,'Value');
+[nr, nc, nChannels]=size(Im1);
+cx=ceil(nc/2);
+cy=ceil(nr/2);
+
+radius = vignetteMidpoint*max(nr,nc);
+maxDistance = sqrt(cx.^2 + cy.^2)-radius;
+
+vignetteImage=Im1;
+for k = 1:nChannels
+    for i=1:nr
+        for j=1:nc
+            distanceFromCenter = sqrt((abs(i-cy).^2)+(abs(j-cx).^2));
+            if(distanceFromCenter>radius)
+                scale= abs(vignetteAmount*(distanceFromCenter-radius)/maxDistance);
+                if (vignetteAmount<0)
+                    vignetteImage(i,j,k)= Im1(i,j,k)*(1-scale)-50*scale;
+                else
+                    vignetteImage(i,j,k)= Im1(i,j,k)/(1-scale)+ 50*scale;
+                end
+            end
+        end
+    end
+end
+
+axes(handles.axesImage);
+imshow(vignetteImage);
+
+
+% --- Executes during object creation, after setting all properties.
+function vignetteAmountSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to vignetteAmountSlider (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function vignetteMidpointSlider_Callback(hObject, eventdata, handles)
+% hObject    handle to vignetteMidpointSlider (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+global Im1 vignetteAmount vignetteMidpoint;
+vignetteMidpoint = get(hObject,'Value');
+[nr, nc, nChannels]=size(Im1);
+cx=ceil(nc/2);
+cy=ceil(nr/2);
+
+radius = vignetteMidpoint*max(nr,nc);
+maxDistance = sqrt(cx.^2 + cy.^2)-radius;
+
+vignetteImage=Im1;
+for k = 1:nChannels
+    for i=1:nr
+        for j=1:nc
+            distanceFromCenter = sqrt((abs(i-cy).^2)+(abs(j-cx).^2));
+            if(distanceFromCenter>radius)
+                scale= abs(vignetteAmount*(distanceFromCenter-radius)/maxDistance);
+                if (vignetteAmount<0)
+                    vignetteImage(i,j,k)= Im1(i,j,k)*(1-scale)-50*scale;
+                else
+                    vignetteImage(i,j,k)= Im1(i,j,k)/(1-scale)+ 50*scale;
+                end
+            end
+        end
+    end
+end
+
+axes(handles.axesImage);
+imshow(vignetteImage);
+
+
+% --- Executes during object creation, after setting all properties.
+function vignetteMidpointSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to vignetteMidpointSlider (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
