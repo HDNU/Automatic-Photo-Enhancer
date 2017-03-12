@@ -620,7 +620,7 @@ vignetteAmount = 2*get(hObject,'Value')-1;
 cx=ceil(nc/2);
 cy=ceil(nr/2);
 
-radius = vignetteMidpoint*max(nr,nc);
+radius = vignetteMidpoint*max(cx,cy);
 maxDistance = sqrt(cx.^2 + cy.^2)-radius;
 
 vignetteImage=Im1;
@@ -631,7 +631,7 @@ for k = 1:nChannels
             if(distanceFromCenter>radius)
                 scale= abs(vignetteAmount*(distanceFromCenter-radius)/maxDistance);
                 if (vignetteAmount<0)
-                    vignetteImage(i,j,k)= Im1(i,j,k)*(1-scale);
+                    vignetteImage(i,j,k)= Im1(i,j,k)*(1-scale)-5*scale;
                 else
                     vignetteImage(i,j,k)= Im1(i,j,k)/(1-scale)+ 5*scale;
                 end
@@ -670,7 +670,7 @@ vignetteMidpoint = get(hObject,'Value');
 cx=ceil(nc/2);
 cy=ceil(nr/2);
 
-radius = vignetteMidpoint*max(nr,nc);
+radius = vignetteMidpoint*max(cx,cy)
 maxDistance = sqrt(cx.^2 + cy.^2)-radius;
 
 vignetteImage=Im1;
@@ -681,7 +681,7 @@ for k = 1:nChannels
             if(distanceFromCenter>radius)
                 scale= abs(vignetteAmount*(distanceFromCenter-radius)/maxDistance);
                 if (vignetteAmount<0)
-                    vignetteImage(i,j,k)= Im1(i,j,k)*(1-scale);
+                    vignetteImage(i,j,k)= Im1(i,j,k)*(1-scale)-5*scale;
                 else
                     vignetteImage(i,j,k)= Im1(i,j,k)/(1-scale)+5*scale;
                 end
