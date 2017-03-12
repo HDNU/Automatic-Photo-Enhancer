@@ -670,7 +670,7 @@ vignetteMidpoint = get(hObject,'Value');
 cx=ceil(nc/2);
 cy=ceil(nr/2);
 
-radius = vignetteMidpoint*max(cx,cy)
+radius = vignetteMidpoint*max(cx,cy);
 maxDistance = sqrt(cx.^2 + cy.^2)-radius;
 
 vignetteImage=Im1;
