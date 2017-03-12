@@ -53,6 +53,9 @@ function apes_OpeningFcn(hObject, eventdata, handles, varargin)
  I = imread('default.jpg');
  axes(handles.axesImage);
  imshow(I);
+ global vignetteAmount vignetteMidpoint;
+ vignetteAmount = 0.5;
+ vignetteMidpoint = 0.5;
 
 % Choose default command line output for apes
 handles.output = hObject;
@@ -612,7 +615,7 @@ function vignetteAmountSlider_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 global Im1 vignetteAmount vignetteMidpoint;
-vignetteAmount = get(hObject,'Value');
+vignetteAmount = 2*get(hObject,'Value')-1;
 [nr, nc, nChannels]=size(Im1);
 cx=ceil(nc/2);
 cy=ceil(nr/2);
@@ -628,9 +631,9 @@ for k = 1:nChannels
             if(distanceFromCenter>radius)
                 scale= abs(vignetteAmount*(distanceFromCenter-radius)/maxDistance);
                 if (vignetteAmount<0)
-                    vignetteImage(i,j,k)= Im1(i,j,k)*(1-scale)-50*scale;
+                    vignetteImage(i,j,k)= Im1(i,j,k)*(1-scale);
                 else
-                    vignetteImage(i,j,k)= Im1(i,j,k)/(1-scale)+ 50*scale;
+                    vignetteImage(i,j,k)= Im1(i,j,k)/(1-scale)+ 5*scale;
                 end
             end
         end
@@ -678,9 +681,9 @@ for k = 1:nChannels
             if(distanceFromCenter>radius)
                 scale= abs(vignetteAmount*(distanceFromCenter-radius)/maxDistance);
                 if (vignetteAmount<0)
-                    vignetteImage(i,j,k)= Im1(i,j,k)*(1-scale)-50*scale;
+                    vignetteImage(i,j,k)= Im1(i,j,k)*(1-scale);
                 else
-                    vignetteImage(i,j,k)= Im1(i,j,k)/(1-scale)+ 50*scale;
+                    vignetteImage(i,j,k)= Im1(i,j,k)/(1-scale)+5*scale;
                 end
             end
         end
