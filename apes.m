@@ -714,3 +714,34 @@ function vignetteMidpointSlider_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+
+
+% --- Executes on slider movement.
+function slider16_Callback(hObject, eventdata, handles)
+% hObject    handle to slider16 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global Im1;
+estimated_noise  = get(hObject,'Value')/50;
+
+LEN = 21;
+THETA = 11;
+PSF = fspecial('motion', LEN, THETA);
+
+wnr3 = deconvwnr(Im1, PSF, estimated_noise);
+axes(handles.axesImage);
+imshow(wnr3)
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider16_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider16 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
