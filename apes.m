@@ -592,18 +592,16 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
 end
 
 
-% --- Executes on button press in pushbutton11.
-function pushbutton11_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton11 (see GCBO)
+% --- Executes on button press in CropPushbutton.
+function CropPushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to CropPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global duplicate
+global Im1;
+croppedImage = imcrop(Im1);
 axes(handles.axesImage);
-imshow(duplicate);
-crop = imcrop(duplicate);
-axes(handles.axes2);
-imshow(crop);
-set(handles.text10, 'String', 'Cropped Image');
+imshow(croppedImage);
+
 
 
 % --- Executes during object creation, after setting all properties.
@@ -777,3 +775,20 @@ function slider16_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+
+
+% --- Executes on button press in Rivert2OriginalPushbutton.
+function Rivert2OriginalPushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to Rivert2OriginalPushbutton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global Im1;
+axes(handles.axesImage);
+imshow(Im1);
+
+
+% --- Executes on button press in UndoLastEditPushbutton.
+function UndoLastEditPushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to UndoLastEditPushbutton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
