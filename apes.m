@@ -96,26 +96,30 @@ currentEditedImage = im2double(currentEditedImage);
 sze = size(currentEditedImage);
 sze = sze(3);
 
-axes(handles.axesImage)
-imshow(currentEditedImage)
+axes(handles.axesImage);
+imshow(currentEditedImage);
+
  
  function pushbutton2_Callback(hObject, eventdata, handles)
 global currentEditedImage;
 Im2 =currentEditedImage;
 Im2(:,:,2)=0;
 Im2(:,:,3)=0;
-
-imshow(Im2);
+currentEditedImage = Im2;
+axes(handles.axesImage);
+imshow(currentEditedImage);
 % hObject    handle to pushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
 
 function pushbutton3_Callback(hObject, eventdata, handles)
 global currentEditedImage;
 Im3=rgb2gray(currentEditedImage);
 Im3=histeq(Im3,64);
+currentEditedImage = Im3;
 axes(handles.axesImage);
-imshow(Im3);
+imshow(currentEditedImage);
 
 
 % --- Executes on button press in pushbutton4.
@@ -123,8 +127,9 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 global currentEditedImage;
 Im4=rgb2gray(currentEditedImage);
 Im4=imsharpen(Im4);
+currentEditedImage = Im4;
 axes(handles.axesImage);
-imshow(Im4);
+imshow(currentEditedImage);
 % hObject    handle to pushbutton4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -154,7 +159,7 @@ global currentEditedImage;
 
 
 % --- Executes on slider movement.
-function slider1_Callback(hObject, eventdata, handles)
+function slider1_Callback(hObject, eventdata, handles) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% img reading again???
 a = get(hObject,'Value');
 filename=handles.filename;
 currentEditedImage =imread(filename);
@@ -316,9 +321,9 @@ img4(:,:,2) =img2;
 img4(:,:,3) =img3;
 
 end
+currentEditedImage = img4;
 axes(handles.axesImage);
-imshow(img4);
-
+imshow(currentEditedImage);
 
 
 
@@ -370,9 +375,10 @@ filtered3 =imfilter(filtered3,Gauss,'same');
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
-
+currentEditedImage = filtered;
 axes(handles.axesImage);
-imshow(filtered)
+imshow(currentEditedImage);
+
 axes(handles.axes2);
 imhist(filtered(:,:,1));
 set(handles.text10, 'String', 'Histogram');
@@ -415,8 +421,10 @@ filtered3 =medfilt2(filtered3,[num num]);
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
+currentEditedImage = filtered;
 axes(handles.axesImage);
-imshow(filtered)
+imshow(currentEditedImage);
+
 axes(handles.axes2);
 imhist(filtered(:,:,1));
 set(handles.text10, 'String', 'Histogram');
@@ -464,8 +472,10 @@ filtered3 = (1+val)*(currentEditedImage(:,:,3))- val*(filtered3);
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
+currentEditedImage = filtered;
 axes(handles.axesImage);
-imshow(filtered)
+imshow(currentEditedImage);
+
 axes(handles.axes2);
 imhist(filtered(:,:,1));
 set(handles.text10, 'String', 'Histogram');
@@ -512,8 +522,10 @@ filtered3 =255.0*c*((filtered3/255.0).^gamma);
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
+currentEditedImage = filtered;
 axes(handles.axesImage);
-imshow(filtered)
+imshow(currentEditedImage);
+
 axes(handles.axes2);
 [yRed, x] = imhist(filtered(:,:,1));
 [yGreen, x] = imhist(filtered(:,:,2));
@@ -542,19 +554,19 @@ function slider13_Callback(hObject, eventdata, handles)
 % hObject    handle to slider13 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global  originalImage sze;
+global  currentEditedImage sze;
 C = (get(hObject,'Value')*256)-128;
 
 
-filtered1 = originalImage(:,:,1);
+filtered1 = currentEditedImage(:,:,1);
 F =(259*(C+255))/(255*(259-C));
 
 filtered1 =uint8(F*(filtered1-128)+128);
-filtered = originalImage;
+filtered = currentEditedImage;
 filtered(:,:,1) =filtered1;
 if(sze==3)
-filtered2 = originalImage(:,:,2);
-filtered3 = originalImage(:,:,3);
+filtered2 = currentEditedImage(:,:,2);
+filtered3 = currentEditedImage(:,:,3);
 
 
 filtered2 =uint8(F*(filtered2-128)+128);
@@ -564,8 +576,11 @@ filtered3 =uint8(F*(filtered3-128)+128);
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
+
+currentEditedImage = filtered;
 axes(handles.axesImage);
-imshow(filtered)
+imshow(currentEditedImage);
+
 axes(handles.axes2);
 [yRed, x] = imhist(filtered(:,:,1));
 [yGreen, x] = imhist(filtered(:,:,2));
@@ -596,8 +611,9 @@ function CropPushbutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage;
 croppedImage = imcrop(currentEditedImage);
+currentEditedImage = croppedImage;
 axes(handles.axesImage);
-imshow(croppedImage);
+imshow(currentEditedImage);
 
 
 
@@ -631,8 +647,8 @@ frame = getframe(handles.axesImage);
 im = frame2im(frame);
 saves =strcat(saves,FileName);
 saves =strcat(saves,'.jpg');
-
 imwrite(im, saves,'jpg')
+
 % --- Executes during object creation, after setting all properties.
 function selectPicture_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to selectPicture (see GCBO)
@@ -676,9 +692,9 @@ for k = 1:nChannels
         end
     end
 end
-
+currentEditedImage = vignetteImage;
 axes(handles.axesImage);
-imshow(vignetteImage);
+imshow(currentEditedImage);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -726,9 +742,9 @@ for k = 1:nChannels
         end
     end
 end
-
+currentEditedImage = vignetteImage;
 axes(handles.axesImage);
-imshow(vignetteImage);
+imshow(currentEditedImage);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -756,8 +772,9 @@ THETA = 11;
 PSF = fspecial('motion', LEN, THETA);
 
 wnr3 = deconvwnr(currentEditedImage, PSF, estimated_noise);
+currentEditedImage = wnr3;
 axes(handles.axesImage);
-imshow(wnr3)
+imshow(currentEditedImage);
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
