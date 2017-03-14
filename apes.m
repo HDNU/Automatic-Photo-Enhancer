@@ -791,6 +791,11 @@ function UndoLastEditPushbutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
+
+
+% -----------Color profile settings----------------------------------------
+
+
 % --- Executes on button press in Lab_to_sRGB.
 function Lab_to_sRGB_Callback(hObject, eventdata, handles)
 % hObject    handle to Lab_to_sRGB (see GCBO)
@@ -798,6 +803,25 @@ function Lab_to_sRGB_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of Lab_to_sRGB
+global Im1;
+i1 = Im1;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.Lab_to_sRGB,'Value',1);
+    try
+        hcsc.Conversion = 'L*a*b* to sRGB';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
 
 
 % --- Executes on button press in sRGB_to_Lab.
@@ -807,57 +831,207 @@ function sRGB_to_Lab_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of sRGB_to_Lab
+global Im1;
+i1 = Im1;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.sRGB_to_Lab,'Value',1);
+    try
+        hcsc.Conversion = 'sRGB to L*a*b*';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
 
 
-% --- Executes on button press in radiobutton3.
-function radiobutton3_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobutton3 (see GCBO)
+% --- Executes on button press in sRGB_to_XYZ.
+function sRGB_to_XYZ_Callback(hObject, eventdata, handles)
+% hObject    handle to sRGB_to_XYZ (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of radiobutton3
+% Hint: get(hObject,'Value') returns toggle state of sRGB_to_XYZ
+global Im1;
+i1 = Im1;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.sRGB_to_XYZ,'Value',1);
+    try
+        hcsc.Conversion = 'sRGB to XYZ';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
 
 
-% --- Executes on button press in radiobutton4.
-function radiobutton4_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobutton4 (see GCBO)
+% --- Executes on button press in XYZ_to_sRGB.
+function XYZ_to_sRGB_Callback(hObject, eventdata, handles)
+% hObject    handle to XYZ_to_sRGB (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of radiobutton4
+% Hint: get(hObject,'Value') returns toggle state of XYZ_to_sRGB
+global Im1;
+i1 = Im1;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.XYZ_to_sRGB,'Value',1);
+    try
+        hcsc.Conversion = 'XYZ to sRGB';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
 
 
-% --- Executes on button press in radiobutton5.
-function radiobutton5_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobutton5 (see GCBO)
+% --- Executes on button press in Default.
+function Default_Callback(hObject, eventdata, handles)
+% hObject    handle to Default (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of radiobutton5
+% Hint: get(hObject,'Value') returns toggle state of Default
+global Im1;
+axes(handles.axesImage);
+imshow(Im1);
+clearPushButton(handles);
+set(handles.Default,'Value',1);
 
 
-% --- Executes on button press in radiobutton6.
-function radiobutton6_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobutton6 (see GCBO)
+% --- Executes on button press in RGB_to_intensity.
+function RGB_to_intensity_Callback(hObject, eventdata, handles)
+% hObject    handle to RGB_to_intensity (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of radiobutton6
+% Hint: get(hObject,'Value') returns toggle state of RGB_to_intensity
+global Im1;
+i1 = Im1;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.RGB_to_intensity,'Value',1);
+    
+    try
+        hcsc.Conversion = 'RGB to intensity';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
 
 
-% --- Executes on button press in radiobutton7.
-function radiobutton7_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobutton7 (see GCBO)
+
+% --- Executes on button press in YCbCr_to_RGB.
+function YCbCr_to_RGB_Callback(hObject, eventdata, handles)
+% hObject    handle to YCbCr_to_RGB (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of radiobutton7
+% Hint: get(hObject,'Value') returns toggle state of YCbCr_to_RGB
+global Im1;
+i1 = Im1;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.YCbCr_to_RGB,'Value',1);
+    try
+        hcsc.Conversion = 'YCbCr to RGB]';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
 
 
-% --- Executes on button press in radiobutton8.
-function radiobutton8_Callback(hObject, eventdata, handles)
-% hObject    handle to radiobutton8 (see GCBO)
+% --- Executes on button press in RGB_to_YCbCr.
+function RGB_to_YCbCr_Callback(hObject, eventdata, handles)
+% hObject    handle to RGB_to_YCbCr (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of radiobutton8
+% Hint: get(hObject,'Value') returns toggle state of RGB_to_YCbCr
+global Im1;
+i1 = Im1;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.RGB_to_YCbCr,'Value',1);
+    try
+        hcsc.Conversion = 'RGB to YCbCr';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
+
+
+% --- Executes on button press in RGB_to_HSV.
+function RGB_to_HSV_Callback(hObject, eventdata, handles)
+% hObject    handle to RGB_to_HSV (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of RGB_to_HSV
+global Im1;
+i1 = Im1;
+hcsc = vision.ColorSpaceConverter;
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.RGB_to_HSV,'Value',1);
+    try
+        hcsc.Conversion = 'RGB to HSV';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    axes(handles.axesImage);
+    imshow(Im1);
+    
+end
