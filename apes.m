@@ -1063,3 +1063,14 @@ if get(hObject,'Value')
 else
     
 end
+
+
+%-----------------metaData calculation-------------------------------------
+
+% --- Executes on button press in metaData.
+function metaData_Callback(hObject, eventdata, handles)
+% hObject    handle to metaData (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global path;
+imageinfo(path);
