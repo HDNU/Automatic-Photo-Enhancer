@@ -803,22 +803,22 @@ function Lab_to_sRGB_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of Lab_to_sRGB
-global Im1;
-i1 = Im1;
+global currentEditedImage;
+i1 = currentEditedImage;
 hcsc = vision.ColorSpaceConverter;
 
 if get(hObject,'Value')
     clearPushButton(handles);
     set(handles.Lab_to_sRGB,'Value',1);
-    try
+   
         hcsc.Conversion = 'L*a*b* to sRGB';
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
-    catch
-        uiwait(msgbox('This conversion is not valid','Error'));
+    
         
-    end
+        
+    
 else
     
 end
@@ -831,8 +831,8 @@ function sRGB_to_Lab_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of sRGB_to_Lab
-global Im1;
-i1 = Im1;
+global currentEditedImage;
+i1 = currentEditedImage;
 hcsc = vision.ColorSpaceConverter;
 
 if get(hObject,'Value')
@@ -859,8 +859,8 @@ function sRGB_to_XYZ_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of sRGB_to_XYZ
-global Im1;
-i1 = Im1;
+global currentEditedImage;
+i1 = currentEditedImage;
 hcsc = vision.ColorSpaceConverter;
 
 if get(hObject,'Value')
@@ -887,8 +887,8 @@ function XYZ_to_sRGB_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of XYZ_to_sRGB
-global Im1;
-i1 = Im1;
+global currentEditedImage;
+i1 = currentEditedImage;
 hcsc = vision.ColorSpaceConverter;
 
 if get(hObject,'Value')
@@ -915,9 +915,9 @@ function Default_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of Default
-global Im1;
+global currentEditedImage;
 axes(handles.axesImage);
-imshow(Im1);
+imshow(currentEditedImage);
 clearPushButton(handles);
 set(handles.Default,'Value',1);
 
@@ -929,8 +929,8 @@ function RGB_to_intensity_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of RGB_to_intensity
-global Im1;
-i1 = Im1;
+global currentEditedImage;
+i1 = currentEditedImage;
 hcsc = vision.ColorSpaceConverter;
 
 if get(hObject,'Value')
@@ -959,8 +959,8 @@ function YCbCr_to_RGB_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of YCbCr_to_RGB
-global Im1;
-i1 = Im1;
+global currentEditedImage;
+i1 = currentEditedImage;
 hcsc = vision.ColorSpaceConverter;
 
 if get(hObject,'Value')
@@ -987,8 +987,8 @@ function RGB_to_YCbCr_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of RGB_to_YCbCr
-global Im1;
-i1 = Im1;
+global currentEditedImage;
+i1 = currentEditedImage;
 hcsc = vision.ColorSpaceConverter;
 
 if get(hObject,'Value')
@@ -1015,8 +1015,8 @@ function RGB_to_HSV_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of RGB_to_HSV
-global Im1;
-i1 = Im1;
+global currentEditedImage;
+i1 = currentEditedImage;
 hcsc = vision.ColorSpaceConverter;
 if get(hObject,'Value')
     clearPushButton(handles);
@@ -1032,6 +1032,34 @@ if get(hObject,'Value')
     end
 else
     axes(handles.axesImage);
-    imshow(Im1);
+    imshow(currentEditedImage);
+    
+end
+
+
+% --- Executes on button press in HSV_to_RGB.
+function HSV_to_RGB_Callback(hObject, eventdata, handles)
+% hObject    handle to HSV_to_RGB (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of HSV_to_RGB
+global currentEditedImage;
+i1 = currentEditedImage;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.HSV_to_RGB,'Value',1);
+    try
+        hcsc.Conversion = 'HSV to RGB';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
     
 end
