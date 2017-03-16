@@ -1,0 +1,2 @@
+a= imread('t.jpg');
+b = rgb2y
