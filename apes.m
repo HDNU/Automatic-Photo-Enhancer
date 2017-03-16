@@ -159,7 +159,13 @@ global currentEditedImage;
     [yBlue, x] = imhist(Blue);
 
     %Plot them together in one plot
-    plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
+    axes(handles.axesImage);
+    a=area([x,x,x],[yRed,yGreen,yBlue]);
+    set(a(1),'FaceColor',[1 0 0]);
+    set(a(2),'FaceColor',[0 1 0]);
+    set(a(3),'FaceColor',[0 0 1]);
+   
+  
 % hObject    handle to Histograms (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -784,6 +790,7 @@ global originalImage currentEditedImage;
 currentEditedImage = originalImage;
 axes(handles.axesImage);
 imshow(currentEditedImage);
+currentEditedImage = im2double(currentEditedImage);
 
 
 % --- Executes on button press in UndoLastEditPushbutton.
@@ -867,81 +874,36 @@ else
 end
 
 % --- Executes on button press in ShadowHighlightRecovery.
-function ShadowHighlightRecovery_Callback(hObject, eventdata, handles)
-% hObject    handle to ShadowHighlightRecovery (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-% Compute normalized log of HDR data
-global currentEditedImage;
-size2=size(currentEditedImage);
-if (length(size2)==2)
-    size2=[size2,1];
-end
-if (size2(3)==3)
-red = currentEditedImage (:,:,1);
-green = currentEditedImage (:,:,2);
-blue = currentEditedImage (:,:,3);
 
-Rthreshold = graythresh(red);
-Gthreshold = graythresh(green);
-Bthreshold = graythresh(blue);
-
-bred = im2bw(red, Rthreshold/2);
-bgreen = im2bw(green, Gthreshold/2);
-bblue = im2bw(blue, Bthreshold/2);
-
-bred = bwareaopen(bred,250);
-bgreen = bwareaopen(bgreen,250);
-bblue = bwareaopen(bblue,250);
-
-SE = strel('disk',10);
-redScale = imclose(bred,SE);
-greenScale = imclose(bgreen,SE);
-blueScale = imclose(bblue,SE);
-
-ScaleImage(:,:,1)=redScale;
-ScaleImage(:,:,2)=greenScale;
-ScaleImage(:,:,3)=blueScale;
-ScaleImage=ScaleImage+0.3;
-
-FinalImage= currentEditedImage .*ScaleImage;
-
-axes(handles.axesImage);
-imshow(FinalImage);
-else
-red = currentEditedImage (:,:,1);
-
-Rthreshold = graythresh(red);
-
-
-bred = im2bw(red, Rthreshold/2);
-
-bred = bwareaopen(bred,250);
-
-
-SE = strel('disk',10);
-redScale = imclose(bred,SE);
-
-
-ScaleImage(:,:,1)=redScale;
-
-ScaleImage=ScaleImage+0.3;
-
-FinalImage= currentEditedImage.*ScaleImage;
-
-axes(handles.axesImage);
-imshow(FinalImage);
-end
 
 
 % --- Executes on button press in Histeq1.
 function Histeq1_Callback(hObject, eventdata, handles)
 global currentEditedImage;
-Im3=rgb2gray(currentEditedImage);
-Im3=histeq(Im3,64);
-currentEditedImage = Im3;
+% Im3=rgb2gray(currentEditedImage);
+% Im3=histeq(Im3,64);
+% currentEditedImage = Im3;
+% axes(handles.axesImage);
+% imshow(currentEditedImage);
+size2=size(currentEditedImage);
+xq=0:1/255:1;
+axes(handles.axes2);
+[x y]=ginput(5);
+vq1 = interp1(x,y,xq,'linear','extrap');
+equalizedImage=zeros(size2);
+plot (xq,vq1);
+vq1=uint8(vq1*256);
+for i=1:size2(1)
+    for j=1:size2(2)
+        for k=1:3
+            equalizedImage(i,j,k)=((vq1(uint8(currentEditedImage(i,j,k)*255)+1)));
+        end
+    end
+end
+
 axes(handles.axesImage);
-imshow(currentEditedImage);
+imshow(equalizedImage);
+currentEditedImage=equalizedImage;
 
 
 function Lab_to_sRGB_Callback(hObject, eventdata, handles)
@@ -1227,3 +1189,90 @@ imageinfo(path);
 
 
 % --- Executes on button press in metaData.
+
+
+% --- Executes on slider movement.
+function ShadowReco_Callback(hObject, eventdata, handles)
+% hObject    handle to ShadowReco (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+% hObject    handle to ShadowHighlightRecovery (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Compute normalized log of HDR data
+coef  = get(hObject,'Value');
+global currentEditedImage;
+size2=size(currentEditedImage);
+if (length(size2)==2)
+    size2=[size2,1];
+end
+if (size2(3)==3)
+red = currentEditedImage (:,:,1);
+green = currentEditedImage (:,:,2);
+blue = currentEditedImage (:,:,3);
+
+Rthreshold = graythresh(red);
+Gthreshold = graythresh(green);
+Bthreshold = graythresh(blue);
+
+bred = im2bw(red, Rthreshold*coef);
+bgreen = im2bw(green, Gthreshold*coef);
+bblue = im2bw(blue, Bthreshold*coef);
+
+bred = bwareaopen(bred,250);
+bgreen = bwareaopen(bgreen,250);
+bblue = bwareaopen(bblue,250);
+
+SE = strel('disk',10);
+redScale = imclose(bred,SE);
+greenScale = imclose(bgreen,SE);
+blueScale = imclose(bblue,SE);
+
+ScaleImage(:,:,1)=redScale;
+ScaleImage(:,:,2)=greenScale;
+ScaleImage(:,:,3)=blueScale;
+ScaleImage=ScaleImage+0.3;
+
+FinalImage= currentEditedImage .*ScaleImage;
+
+axes(handles.axesImage);
+imshow(FinalImage);
+else
+red = currentEditedImage (:,:,1);
+
+Rthreshold = graythresh(red);
+
+
+bred = im2bw(red, Rthreshold*coef);
+
+bred = bwareaopen(bred,250);
+
+
+SE = strel('disk',10);
+redScale = imclose(bred,SE);
+
+
+ScaleImage(:,:,1)=redScale;
+
+ScaleImage=ScaleImage+0.3;
+
+FinalImage= currentEditedImage.*ScaleImage;
+
+axes(handles.axesImage);
+imshow(FinalImage);
+end
+
+% --- Executes during object creation, after setting all properties.
+function ShadowReco_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to ShadowReco (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
