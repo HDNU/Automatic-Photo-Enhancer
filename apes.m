@@ -83,11 +83,9 @@ function selectPicture_Callback(hObject, eventdata, handles)
 % hObject    handle to selectPicture (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global path sze colour_slide luminance_slide;
+global path sze;
 [path, Cancel] = imgetfile();
-colour_slide =3;
-luminance_slide=3;
-global currentEditedImage originalImage;
+global currentEditedImage originalImage hueImage satImage;
 if Cancel
     msgbox(sprintf('Error'),'Error','Error');
     return
@@ -96,44 +94,56 @@ currentEditedImage = imread(path);
 originalImage = currentEditedImage;
 currentEditedImage = im2double(currentEditedImage);
 sze = size(currentEditedImage);
+if (length(sze)==2)
+  sze=[sze,1];
+end
 sze = sze(3);
-
-axes(handles.axesImage)
-imshow(currentEditedImage)
- 
- function pushbutton2_Callback(hObject, eventdata, handles)
-global currentEditedImage;
-Im2 =currentEditedImage;
-Im2(:,:,2)=0;
-Im2(:,:,3)=0;
-
-imshow(Im2);
-% hObject    handle to pushbutton2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-function pushbutton3_Callback(hObject, eventdata, handles)
-global currentEditedImage;
-Im3=rgb2gray(currentEditedImage);
-Im3=histeq(Im3,64);
 axes(handles.axesImage);
-imshow(Im3);
+
+imshow(currentEditedImage);
+size2 = size(currentEditedImage);
+if (length(size2)==2)
+    size2=[size2,1];
+end
+if (size2(1,3)==3)
+hueImage=rgb2hsv(currentEditedImage);
+step=round(size2(1,2)/200);
+i=0;
+for l=1:step:200*step
+    
+    hueImage(:,l,1)=i/200;
+    i=i+1;
+end
+
+hueImage=hueImage(1:20,1:step:200*step,:) ;
+
+% im2(:,:,2)=0.75;
+% im2(:,:,3)=0.75;
+axes(handles.Hue);
+imshow(hueImage);
+
+satImage=rgb2hsv(currentEditedImage);
+i=0;
+for l=1:step:200*step
+    satImage(1,l,2)=i/200;
+     i=i+1;
+end
+
+ satImage= satImage(1:20,1:step:200*step,:) ;
+
+% im2(:,:,2)=0.75;
+% im2(:,:,3)=0.75;
+axes(handles.Saturation);
+imshow( satImage);
+end
 
 
-% --- Executes on button press in pushbutton4.
-function pushbutton4_Callback(hObject, eventdata, handles)
-global currentEditedImage;
-Im4=rgb2gray(currentEditedImage);
-Im4=imsharpen(Im4);
-axes(handles.axesImage);
-imshow(Im4);
-% hObject    handle to pushbutton4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Executes on button press in pushbutton5.
-function pushbutton5_Callback(hObject, eventdata, handles)
+
+
+% --- Executes on button press in Histograms.
+function Histograms_Callback(hObject, eventdata, handles)
 % h = uicontrol('Style','text','String','Hello world','Position',[200 420 100 20]);
 global currentEditedImage;
 % MultiSlider
@@ -149,14 +159,20 @@ global currentEditedImage;
     [yBlue, x] = imhist(Blue);
 
     %Plot them together in one plot
-    plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
-% hObject    handle to pushbutton5 (see GCBO)
+    axes(handles.axesImage);
+    a=area([x,x,x],[yRed,yGreen,yBlue]);
+    set(a(1),'FaceColor',[1 0 0]);
+    set(a(2),'FaceColor',[0 1 0]);
+    set(a(3),'FaceColor',[0 0 1]);
+   
+  
+% hObject    handle to Histograms (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 
 % --- Executes on slider movement.
-function slider1_Callback(hObject, eventdata, handles)
+function slider1_Callback(hObject, eventdata, handles) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% img reading again???
 a = get(hObject,'Value');
 filename=handles.filename;
 currentEditedImage =imread(filename);
@@ -211,28 +227,6 @@ end
 
 
 
-function edit2_Callback(hObject, eventdata, handles)
-% hObject    handle to edit2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of edit2 as text
-%        str2double(get(hObject,'String')) returns contents of edit2 as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function edit2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to edit2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-%string1 = sprintf('Dynamic');
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
 
 
 
@@ -271,20 +265,13 @@ handles.jil=1;
 guidata(hObject,handles);
 
 
-% --- Executes on button press in radiobutton2.
+% --- Executes on button press in sRGB_to_Lab.
 
-% hObject    handle to radiobutton2 (see GCBO)
+% hObject    handle to sRGB_to_Lab (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of radiobutton2
-
-
-% --- Executes on button press in pushbutton8.
-function pushbutton8_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton8 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+% Hint: get(hObject,'Value') returns toggle state of sRGB_to_Lab
 
 
 % --- Executes on button press in pushbutton9.
@@ -318,9 +305,9 @@ img4(:,:,2) =img2;
 img4(:,:,3) =img3;
 
 end
+currentEditedImage = img4;
 axes(handles.axesImage);
-imshow(img4);
-
+imshow(currentEditedImage);
 
 
 
@@ -356,8 +343,7 @@ global currentEditedImage sze;
 val = get(hObject,'Value');
 filtered1 = currentEditedImage(:,:,1);
 sigma =(val)+1;
-ker = ceil(3*sigma);
-Gauss =fspecial('gaussian',[ker ker],sigma);
+Gauss =fspecial('gaussian',[5 5],sigma);
 filtered1 =imfilter(filtered1,Gauss,'same');
 
 filtered = currentEditedImage;
@@ -373,9 +359,10 @@ filtered3 =imfilter(filtered3,Gauss,'same');
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
-
+currentEditedImage = filtered;
 axes(handles.axesImage);
-imshow(filtered)
+imshow(currentEditedImage);
+
 axes(handles.axes2);
 imhist(filtered(:,:,1));
 set(handles.text10, 'String', 'Histogram');
@@ -418,8 +405,10 @@ filtered3 =medfilt2(filtered3,[num num]);
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
+currentEditedImage = filtered;
 axes(handles.axesImage);
-imshow(filtered)
+imshow(currentEditedImage);
+
 axes(handles.axes2);
 imhist(filtered(:,:,1));
 set(handles.text10, 'String', 'Histogram');
@@ -448,10 +437,7 @@ global currentEditedImage sze;
 val = get(hObject,'Value');
 filtered1 = currentEditedImage(:,:,1);
 sigma =(val)+1;
-
-ker_size = 3*sigma;
-
-Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
+Gauss =fspecial('gaussian',[5 5],sigma);
 filtered1 =imfilter(filtered1,Gauss,'same');
 filtered1 = (1+val)*(currentEditedImage(:,:,1))- val*(filtered1);
 
@@ -470,8 +456,10 @@ filtered3 = (1+val)*(currentEditedImage(:,:,3))- val*(filtered3);
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
+currentEditedImage = filtered;
 axes(handles.axesImage);
-imshow(filtered)
+imshow(currentEditedImage);
+
 axes(handles.axes2);
 imhist(filtered(:,:,1));
 set(handles.text10, 'String', 'Histogram');
@@ -518,8 +506,10 @@ filtered3 =255.0*c*((filtered3/255.0).^gamma);
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
+currentEditedImage = filtered;
 axes(handles.axesImage);
-imshow(filtered)
+imshow(currentEditedImage);
+
 axes(handles.axes2);
 [yRed, x] = imhist(filtered(:,:,1));
 [yGreen, x] = imhist(filtered(:,:,2));
@@ -548,19 +538,19 @@ function slider13_Callback(hObject, eventdata, handles)
 % hObject    handle to slider13 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global  originalImage sze;
-%C = (get(hObject,'Value')*256)-128;
+global  currentEditedImage sze;
+C = (get(hObject,'Value')*256)-128;
 
-C = (get(hObject,'Value')*510)-255;
-filtered1 = originalImage(:,:,1);
+
+filtered1 = currentEditedImage(:,:,1);
 F =(259*(C+255))/(255*(259-C));
 
 filtered1 =uint8(F*(filtered1-128)+128);
-filtered = originalImage;
+filtered = currentEditedImage;
 filtered(:,:,1) =filtered1;
 if(sze==3)
-filtered2 = originalImage(:,:,2);
-filtered3 = originalImage(:,:,3);
+filtered2 = currentEditedImage(:,:,2);
+filtered3 = currentEditedImage(:,:,3);
 
 
 filtered2 =uint8(F*(filtered2-128)+128);
@@ -570,8 +560,11 @@ filtered3 =uint8(F*(filtered3-128)+128);
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
+
+currentEditedImage = filtered;
 axes(handles.axesImage);
-imshow(filtered)
+imshow(currentEditedImage);
+
 axes(handles.axes2);
 [yRed, x] = imhist(filtered(:,:,1));
 [yGreen, x] = imhist(filtered(:,:,2));
@@ -600,10 +593,17 @@ function CropPushbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to CropPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global currentEditedImage;
-croppedImage = imcrop(currentEditedImage);
+global currentEditedImage satImage hueImage;
+axes(handles.Saturation);
+imshow(satImage);
+axes(handles.Hue);
+imshow(hueImage);
 axes(handles.axesImage);
-imshow(croppedImage);
+imshow(currentEditedImage);
+croppedImage = imcrop(currentEditedImage);
+currentEditedImage = croppedImage;
+axes(handles.axes2);
+imshow(currentEditedImage);
 
 
 
@@ -637,8 +637,8 @@ frame = getframe(handles.axesImage);
 im = frame2im(frame);
 saves =strcat(saves,FileName);
 saves =strcat(saves,'.jpg');
-
 imwrite(im, saves,'jpg')
+
 % --- Executes during object creation, after setting all properties.
 function selectPicture_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to selectPicture (see GCBO)
@@ -682,9 +682,9 @@ for k = 1:nChannels
         end
     end
 end
-
+currentEditedImage = vignetteImage;
 axes(handles.axesImage);
-imshow(vignetteImage);
+imshow(currentEditedImage);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -732,9 +732,9 @@ for k = 1:nChannels
         end
     end
 end
-
+currentEditedImage = vignetteImage;
 axes(handles.axesImage);
-imshow(vignetteImage);
+imshow(currentEditedImage);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -762,8 +762,9 @@ THETA = 11;
 PSF = fspecial('motion', LEN, THETA);
 
 wnr3 = deconvwnr(currentEditedImage, PSF, estimated_noise);
+currentEditedImage = wnr3;
 axes(handles.axesImage);
-imshow(wnr3)
+imshow(currentEditedImage);
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
@@ -785,9 +786,11 @@ function Rivert2OriginalPushbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to Rivert2OriginalPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global originalImage ;
+global originalImage currentEditedImage;
+currentEditedImage = originalImage;
 axes(handles.axesImage);
-imshow(originalImage);
+imshow(currentEditedImage);
+currentEditedImage = im2double(currentEditedImage);
 
 
 % --- Executes on button press in UndoLastEditPushbutton.
@@ -797,205 +800,486 @@ function UndoLastEditPushbutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 
+% --- Executes on slider movement.
+
 
 
 % --- Executes on slider movement.
-function Wiener_Filter_Callback(hObject, eventdata, handles)
-% hObject    handle to Wiener_Filter (see GCBO)
+
+
+% --- Executes on button press in SetHue.
+function SetHue_Callback(hObject, eventdata, handles)
+% hObject    handle to SetHue (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global  originalImage sze;
 
-Kernel_Size = ceil(get(hObject,'Value')*10+1);
-filtered = originalImage;
-filtered(:,:,1) = wiener2(originalImage(:,:,1),[Kernel_Size Kernel_Size]);
+global hueImage hue_min_val hue_max_val currentEditedImage ;
+size2=size(currentEditedImage);
+if (length(size2)==2)
+    size2=[size2,1];
+end
+if (size2(3)==3)
+    
+axes(handles.Hue);
+imshow(hueImage);
+croppedImage = imcrop(hueImage);
 
-if(sze==3)
-  filtered(:,:,2) = wiener2(originalImage(:,:,2),[Kernel_Size Kernel_Size]);
-  filtered(:,:,3) = wiener2(originalImage(:,:,3),[Kernel_Size Kernel_Size]);
+sze = size(croppedImage);
+hue_min_val = croppedImage(1,1,1);
+hue_max_val =croppedImage(1,sze(2),1);
+
+ImageHSV = rgb2hsv(currentEditedImage);
+ImageHSV1(:,:,1)=hue_min_val + (ImageHSV(:,:,1))*(hue_max_val-hue_min_val);
+ImageHSV1(:,:,2)=ImageHSV(:,:,2);
+ImageHSV1(:,:,3)=ImageHSV(:,:,3);
+
+axes(handles.axes2);
+imshow(croppedImage);
+axes(handles.axesImage);
+imshow(ImageHSV1);
+else
+ msgbox(sprintf('Input color Image'),'Error','Error');
 end
 
-imshow(filtered);
-% Hints: get(hObject,'Value') returns position of slider
-%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-
-
-% --- Executes during object creation, after setting all properties.
-function Wiener_Filter_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to Wiener_Filter (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: slider controls usually have a light gray background.
-if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
-end
-
-
-% --- Executes on slider movement.
-function fuzzy_Callback(hObject, eventdata, handles)
-% hObject    handle to fuzzy (see GCBO)
+% --- Executes on button press in Sat.
+function Sat_Callback(hObject, eventdata, handles)
+% hObject    handle to Sat (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global sze originalImage
-h = ceil(get(hObject,'Value')*10 +2);
+global satImage sat_min_val sat_max_val currentEditedImage ;
+size2=size(currentEditedImage);
+if (length(size2)==2)
+    size2=[size2,1];
+end
+if (size2(3)==3)
+axes(handles.Saturation);
+imshow(satImage);
+croppedImage = imcrop(satImage);
 
-condition = mod(h,2);
-if(condition==0)
-    h=h+1;
+sze = size(croppedImage);
+sat_min_val = croppedImage(1,1,2);
+sat_max_val =croppedImage(1,sze(2),2);
+
+ImageHSV = rgb2hsv(currentEditedImage);
+ImageHSV1(:,:,2)=sat_min_val + (ImageHSV(:,:,2))*(sat_max_val-sat_min_val);
+ImageHSV1(:,:,1)=ImageHSV(:,:,1);
+ImageHSV1(:,:,3)=ImageHSV(:,:,3);
+
+axes(handles.axes2);
+imshow(croppedImage);
+axes(handles.axesImage);
+imshow(ImageHSV1);
+else
+ msgbox(sprintf('Input color Image'),'Error','Error');
 end
 
-filtered  = zeros(size(originalImage));
+% --- Executes on button press in ShadowHighlightRecovery.
 
 
-for num=1:1:sze
-f=(h-1)/2 ;   % padding value for window: f=1; f=2; f=3; f=4; f=5;
 
-F = zeros(h*h,1);
-Image = double(padarray(originalImage(:,:,num),[f f],'symmetric'));
-[m n ~] = size(originalImage(:,:,num));
-for i=1+f:1:m-f
-   for j=1+f:1:n-f
-       x=reshape(Image(i-f:i+f, j-f:j+f),[],1);
-       xmin = min(x);
-       xmav = mean(x);
-       xmax = max(x);
-       
-       F(:,:) = 0;
-       if (xmav-xmin==0)||(xmax-xmav==0)
-           F(:,:) = 1;
-       else
-           ind1 = find((x>=xmin)&(x<=xmav));
-           F(ind1) = 1-(xmav-x(ind1))/(xmav-xmin);
-           
-           ind2 = find((x>=xmav)&(x<=xmax));
-           F(ind2) = 1-(x(ind2)-xmav)/(xmax-xmav);
-       end
+% --- Executes on button press in Histeq1.
+function Histeq1_Callback(hObject, eventdata, handles)
+global currentEditedImage;
+% Im3=rgb2gray(currentEditedImage);
+% Im3=histeq(Im3,64);
+% currentEditedImage = Im3;
+% axes(handles.axesImage);
+% imshow(currentEditedImage);
+size2=size(currentEditedImage);
+size2(3)=1;
+xq=0:1/255:1;
+axes(handles.axes2);
+x1=[0;1];
+y1=[0;1];
+vq1 = interp1(x1,y1,xq,'linear');
+plot (xq,vq1);
+for i=1:4
+[x y]=ginput(1);
+x1=[x1;x];
+y1=[y1;y];
+vq1 = interp1(x1,y1,xq,'splaine');
+equalizedImage=zeros(size2(1),size2(2));
+plot (xq,vq1);
+vq1=uint8(vq1*256);
+grayImage=(uint8(currentEditedImage*255));
+
+for i=1:size2(1)
+    for j=1:size2(2)
+     for k=1:3
+            equalizedImage(i,j,k)=vq1(1,grayImage(i,j,k)+1);
+     end
+    end
+end
+equalizedImage=equalizedImage/255;
+axes(handles.axesImage);
+imshow(equalizedImage);
+
+end
+currentEditedImage=equalizedImage;
+
+function Lab_to_sRGB_Callback(hObject, eventdata, handles)
+% hObject    handle to Lab_to_sRGB (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of Lab_to_sRGB
+global currentEditedImage;
+i1 = currentEditedImage;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.Lab_to_sRGB,'Value',1);
+   
+        hcsc.Conversion = 'L*a*b* to sRGB';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    
         
-       filtered(i-f,j-f,num) = sum(sum(F.*x))/sum(sum(F));
-       clear xmax xmin xmav ind1 ind2;
-   end
+        
+    
+else
+    
 end
 
-end
-filtered = filtered(1:m-2*f,1:n-2*f,:);
-filtered =uint8(filtered);
-imshow(filtered)
-% Hints: get(hObject,'Value') returns position of slider
-%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
-
-% --- Executes during object creation, after setting all properties.
-function fuzzy_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to fuzzy (see GCBO)
+% --- Executes on button press in sRGB_to_Lab.
+function sRGB_to_Lab_Callback(hObject, eventdata, handles)
+% hObject    handle to sRGB_to_Lab (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
+% handles    structure with handles and user data (see GUIDATA)
 
-% Hint: slider controls usually have a light gray background.
-if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
+% Hint: get(hObject,'Value') returns toggle state of sRGB_to_Lab
+global currentEditedImage;
+i1 = currentEditedImage;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.sRGB_to_Lab,'Value',1);
+    try
+        hcsc.Conversion = 'sRGB to L*a*b*';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
 end
+
+
+% --- Executes on button press in sRGB_to_XYZ.
+function sRGB_to_XYZ_Callback(hObject, eventdata, handles)
+% hObject    handle to sRGB_to_XYZ (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of sRGB_to_XYZ
+global currentEditedImage;
+i1 = currentEditedImage;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.sRGB_to_XYZ,'Value',1);
+    try
+        hcsc.Conversion = 'sRGB to XYZ';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
+
+
+% --- Executes on button press in XYZ_to_sRGB.
+function XYZ_to_sRGB_Callback(hObject, eventdata, handles)
+% hObject    handle to XYZ_to_sRGB (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of XYZ_to_sRGB
+global currentEditedImage;
+i1 = currentEditedImage;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.XYZ_to_sRGB,'Value',1);
+    try
+        hcsc.Conversion = 'XYZ to sRGB';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
+
+
+% --- Executes on button press in Default.
+function Default_Callback(hObject, eventdata, handles)
+% hObject    handle to Default (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of Default
+global currentEditedImage;
+axes(handles.axesImage);
+imshow(currentEditedImage);
+clearPushButton(handles);
+set(handles.Default,'Value',1);
+
+
+% --- Executes on button press in RGB_to_intensity.
+function RGB_to_intensity_Callback(hObject, eventdata, handles)
+% hObject    handle to RGB_to_intensity (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of RGB_to_intensity
+global currentEditedImage;
+i1 = currentEditedImage;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.RGB_to_intensity,'Value',1);
+    
+    try
+        hcsc.Conversion = 'RGB to intensity';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
+
+
+
+% --- Executes on button press in YCbCr_to_RGB.
+function YCbCr_to_RGB_Callback(hObject, eventdata, handles)
+% hObject    handle to YCbCr_to_RGB (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of YCbCr_to_RGB
+global currentEditedImage;
+i1 = currentEditedImage;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.YCbCr_to_RGB,'Value',1);
+    try
+        hcsc.Conversion = 'YCbCr to RGB]';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
+
+
+% --- Executes on button press in RGB_to_YCbCr.
+function RGB_to_YCbCr_Callback(hObject, eventdata, handles)
+% hObject    handle to RGB_to_YCbCr (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of RGB_to_YCbCr
+global currentEditedImage;
+i1 = currentEditedImage;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.RGB_to_YCbCr,'Value',1);
+    try
+        hcsc.Conversion = 'RGB to YCbCr';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
+
+
+% --- Executes on button press in RGB_to_HSV.
+function RGB_to_HSV_Callback(hObject, eventdata, handles)
+% hObject    handle to RGB_to_HSV (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of RGB_to_HSV
+global currentEditedImage;
+i1 = currentEditedImage;
+hcsc = vision.ColorSpaceConverter;
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.RGB_to_HSV,'Value',1);
+    try
+        hcsc.Conversion = 'RGB to HSV';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    axes(handles.axesImage);
+    imshow(currentEditedImage);
+    
+end
+
+
+% --- Executes on button press in HSV_to_RGB.
+function HSV_to_RGB_Callback(hObject, eventdata, handles)
+% hObject    handle to HSV_to_RGB (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of HSV_to_RGB
+global currentEditedImage;
+i1 = currentEditedImage;
+hcsc = vision.ColorSpaceConverter;
+
+if get(hObject,'Value')
+    clearPushButton(handles);
+    set(handles.HSV_to_RGB,'Value',1);
+    try
+        hcsc.Conversion = 'HSV to RGB';
+        i2 = step(hcsc, i1);
+        axes(handles.axesImage);
+        imshow(i2);
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+        
+    end
+else
+    
+end
+
+
+%-----------------metaData calculation-------------------------------------
+
+% --- Executes on button press in metaData.
+function metaData_Callback(hObject, eventdata, handles)
+% hObject    handle to metaData (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global path;
+imageinfo(path);
+% hObject    handle to Histeq1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in metaData.
 
 
 % --- Executes on slider movement.
-function ColourNoise_Callback(hObject, eventdata, handles)
-% hObject    handle to ColourNoise (see GCBO)
+function ShadowReco_Callback(hObject, eventdata, handles)
+% hObject    handle to ShadowReco (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global originalImage sze  colour_slide luminance_slide;
 
-colour_slide = get(hObject,'Value');
-colour_slide 
-luminance_slide
-if(sze==3)
-YCrCb_Image = rgb2ycbcr(originalImage);
-
-num =ceil(colour_slide *10)+1;
-sigma =(luminance_slide)+1;
-ker_size =ceil(3*sigma);
-
-filtered = YCrCb_Image;
-
-filtered1 = YCrCb_Image(:,:,1);
-Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
-filtered1 =imfilter(filtered1,Gauss,'same');
-filtered(:,:,1) =filtered1;
-
-
-filtered2 = YCrCb_Image(:,:,2);
-filtered2 =medfilt2(filtered2,[num num]);
-filtered(:,:,2) =filtered2;
-
-filtered3 = YCrCb_Image(:,:,3);
-filtered3 =medfilt2(filtered3,[num num]);
-filtered(:,:,3) =filtered3;
-
-final = ycbcr2rgb(filtered);
-imshow(final)
-end
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
-
-% --- Executes during object creation, after setting all properties.
-function ColourNoise_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to ColourNoise (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: slider controls usually have a light gray background.
-if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
-end
-
-
-
-
-
-
-% --- Executes on slider movement.
-function lumin_Callback(hObject, eventdata, handles)
-% hObject    handle to lumin (see GCBO)
+% hObject    handle to ShadowHighlightRecovery (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global originalImage sze  colour_slide luminance_slide;
-
-luminance_slide = get(hObject,'Value')*10;
-colour_slide 
-luminance_slide
-if(sze==3)
-YCrCb_Image = rgb2ycbcr(originalImage);
-
-num =ceil(colour_slide*10)+1;
-sigma =(luminance_slide)+1;
-ker_size =ceil(3*sigma);
-
-filtered = YCrCb_Image;
-
-filtered1 = YCrCb_Image(:,:,1);
-Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
-filtered1 =imfilter(filtered1,Gauss,'same');
-filtered(:,:,1) =filtered1;
-
-
-filtered2 = YCrCb_Image(:,:,2);
-filtered2 =medfilt2(filtered2,[num num]);
-filtered(:,:,2) =filtered2;
-
-filtered3 = YCrCb_Image(:,:,3);
-filtered3 =medfilt2(filtered3,[num num]);
-filtered(:,:,3) =filtered3;
-
-final = ycbcr2rgb(filtered);
-imshow(final)
+% Compute normalized log of HDR data
+coef  = get(hObject,'Value');
+global currentEditedImage;
+size2=size(currentEditedImage);
+if (length(size2)==2)
+    size2=[size2,1];
 end
-% Hints: get(hObject,'Value') returns position of slider
-%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+if (size2(3)==3)
+red = currentEditedImage (:,:,1);
+green = currentEditedImage (:,:,2);
+blue = currentEditedImage (:,:,3);
 
+Rthreshold = graythresh(red);
+Gthreshold = graythresh(green);
+Bthreshold = graythresh(blue);
+
+bred = im2bw(red, Rthreshold*coef);
+bgreen = im2bw(green, Gthreshold*coef);
+bblue = im2bw(blue, Bthreshold*coef);
+
+bred = bwareaopen(bred,250);
+bgreen = bwareaopen(bgreen,250);
+bblue = bwareaopen(bblue,250);
+
+SE = strel('disk',10);
+redScale = imclose(bred,SE);
+greenScale = imclose(bgreen,SE);
+blueScale = imclose(bblue,SE);
+
+ScaleImage(:,:,1)=redScale;
+ScaleImage(:,:,2)=greenScale;
+ScaleImage(:,:,3)=blueScale;
+ScaleImage=ScaleImage+0.3;
+
+FinalImage= currentEditedImage .*ScaleImage;
+
+axes(handles.axesImage);
+imshow(FinalImage);
+else
+red = currentEditedImage (:,:,1);
+
+Rthreshold = graythresh(red);
+
+
+bred = im2bw(red, Rthreshold*coef);
+
+bred = bwareaopen(bred,250);
+
+
+SE = strel('disk',10);
+redScale = imclose(bred,SE);
+
+
+ScaleImage(:,:,1)=redScale;
+
+ScaleImage=ScaleImage+0.3;
+
+FinalImage= currentEditedImage.*ScaleImage;
+
+axes(handles.axesImage);
+imshow(FinalImage);
+end
 
 % --- Executes during object creation, after setting all properties.
-function lumin_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to lumin (see GCBO)
+function ShadowReco_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to ShadowReco (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
