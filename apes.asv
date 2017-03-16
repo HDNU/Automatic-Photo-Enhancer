@@ -83,8 +83,10 @@ function selectPicture_Callback(hObject, eventdata, handles)
 % hObject    handle to selectPicture (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global path sze;
+global path sze colour_slide luminance_slide;
 [path, Cancel] = imgetfile();
+colour_slide =3;
+luminance_slide=3;
 global currentEditedImage originalImage;
 if Cancel
     msgbox(sprintf('Error'),'Error','Error');
@@ -96,30 +98,26 @@ currentEditedImage = im2double(currentEditedImage);
 sze = size(currentEditedImage);
 sze = sze(3);
 
-axes(handles.axesImage);
-imshow(currentEditedImage);
-
+axes(handles.axesImage)
+imshow(currentEditedImage)
  
  function pushbutton2_Callback(hObject, eventdata, handles)
 global currentEditedImage;
 Im2 =currentEditedImage;
 Im2(:,:,2)=0;
 Im2(:,:,3)=0;
-currentEditedImage = Im2;
-axes(handles.axesImage);
-imshow(currentEditedImage);
+
+imshow(Im2);
 % hObject    handle to pushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 
 function pushbutton3_Callback(hObject, eventdata, handles)
 global currentEditedImage;
 Im3=rgb2gray(currentEditedImage);
 Im3=histeq(Im3,64);
-currentEditedImage = Im3;
 axes(handles.axesImage);
-imshow(currentEditedImage);
+imshow(Im3);
 
 
 % --- Executes on button press in pushbutton4.
@@ -127,9 +125,8 @@ function pushbutton4_Callback(hObject, eventdata, handles)
 global currentEditedImage;
 Im4=rgb2gray(currentEditedImage);
 Im4=imsharpen(Im4);
-currentEditedImage = Im4;
 axes(handles.axesImage);
-imshow(currentEditedImage);
+imshow(Im4);
 % hObject    handle to pushbutton4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -159,7 +156,7 @@ global currentEditedImage;
 
 
 % --- Executes on slider movement.
-function slider1_Callback(hObject, eventdata, handles) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% img reading again???
+function slider1_Callback(hObject, eventdata, handles)
 a = get(hObject,'Value');
 filename=handles.filename;
 currentEditedImage =imread(filename);
@@ -321,9 +318,9 @@ img4(:,:,2) =img2;
 img4(:,:,3) =img3;
 
 end
-currentEditedImage = img4;
 axes(handles.axesImage);
-imshow(currentEditedImage);
+imshow(img4);
+
 
 
 
@@ -359,7 +356,8 @@ global currentEditedImage sze;
 val = get(hObject,'Value');
 filtered1 = currentEditedImage(:,:,1);
 sigma =(val)+1;
-Gauss =fspecial('gaussian',[5 5],sigma);
+ker = ceil(3*sigma);
+Gauss =fspecial('gaussian',[ker ker],sigma);
 filtered1 =imfilter(filtered1,Gauss,'same');
 
 filtered = currentEditedImage;
@@ -375,10 +373,9 @@ filtered3 =imfilter(filtered3,Gauss,'same');
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
-currentEditedImage = filtered;
-axes(handles.axesImage);
-imshow(currentEditedImage);
 
+axes(handles.axesImage);
+imshow(filtered)
 axes(handles.axes2);
 imhist(filtered(:,:,1));
 set(handles.text10, 'String', 'Histogram');
@@ -421,10 +418,8 @@ filtered3 =medfilt2(filtered3,[num num]);
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
-currentEditedImage = filtered;
 axes(handles.axesImage);
-imshow(currentEditedImage);
-
+imshow(filtered)
 axes(handles.axes2);
 imhist(filtered(:,:,1));
 set(handles.text10, 'String', 'Histogram');
@@ -453,7 +448,10 @@ global currentEditedImage sze;
 val = get(hObject,'Value');
 filtered1 = currentEditedImage(:,:,1);
 sigma =(val)+1;
-Gauss =fspecial('gaussian',[5 5],sigma);
+
+ker_size = 3*sigma;
+
+Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
 filtered1 =imfilter(filtered1,Gauss,'same');
 filtered1 = (1+val)*(currentEditedImage(:,:,1))- val*(filtered1);
 
@@ -472,10 +470,8 @@ filtered3 = (1+val)*(currentEditedImage(:,:,3))- val*(filtered3);
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
-currentEditedImage = filtered;
 axes(handles.axesImage);
-imshow(currentEditedImage);
-
+imshow(filtered)
 axes(handles.axes2);
 imhist(filtered(:,:,1));
 set(handles.text10, 'String', 'Histogram');
@@ -522,10 +518,8 @@ filtered3 =255.0*c*((filtered3/255.0).^gamma);
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
-currentEditedImage = filtered;
 axes(handles.axesImage);
-imshow(currentEditedImage);
-
+imshow(filtered)
 axes(handles.axes2);
 [yRed, x] = imhist(filtered(:,:,1));
 [yGreen, x] = imhist(filtered(:,:,2));
@@ -554,19 +548,19 @@ function slider13_Callback(hObject, eventdata, handles)
 % hObject    handle to slider13 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global  currentEditedImage sze;
-C = (get(hObject,'Value')*256)-128;
+global  originalImage sze;
+%C = (get(hObject,'Value')*256)-128;
 
-
-filtered1 = currentEditedImage(:,:,1);
+C = (get(hObject,'Value')*510)-255;
+filtered1 = originalImage(:,:,1);
 F =(259*(C+255))/(255*(259-C));
 
 filtered1 =uint8(F*(filtered1-128)+128);
-filtered = currentEditedImage;
+filtered = originalImage;
 filtered(:,:,1) =filtered1;
 if(sze==3)
-filtered2 = currentEditedImage(:,:,2);
-filtered3 = currentEditedImage(:,:,3);
+filtered2 = originalImage(:,:,2);
+filtered3 = originalImage(:,:,3);
 
 
 filtered2 =uint8(F*(filtered2-128)+128);
@@ -576,11 +570,8 @@ filtered3 =uint8(F*(filtered3-128)+128);
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
-
-currentEditedImage = filtered;
 axes(handles.axesImage);
-imshow(currentEditedImage);
-
+imshow(filtered)
 axes(handles.axes2);
 [yRed, x] = imhist(filtered(:,:,1));
 [yGreen, x] = imhist(filtered(:,:,2));
@@ -611,9 +602,8 @@ function CropPushbutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage;
 croppedImage = imcrop(currentEditedImage);
-currentEditedImage = croppedImage;
 axes(handles.axesImage);
-imshow(currentEditedImage);
+imshow(croppedImage);
 
 
 
@@ -647,8 +637,8 @@ frame = getframe(handles.axesImage);
 im = frame2im(frame);
 saves =strcat(saves,FileName);
 saves =strcat(saves,'.jpg');
-imwrite(im, saves,'jpg')
 
+imwrite(im, saves,'jpg')
 % --- Executes during object creation, after setting all properties.
 function selectPicture_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to selectPicture (see GCBO)
@@ -692,9 +682,9 @@ for k = 1:nChannels
         end
     end
 end
-currentEditedImage = vignetteImage;
+
 axes(handles.axesImage);
-imshow(currentEditedImage);
+imshow(vignetteImage);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -742,9 +732,9 @@ for k = 1:nChannels
         end
     end
 end
-currentEditedImage = vignetteImage;
+
 axes(handles.axesImage);
-imshow(currentEditedImage);
+imshow(vignetteImage);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -772,9 +762,8 @@ THETA = 11;
 PSF = fspecial('motion', LEN, THETA);
 
 wnr3 = deconvwnr(currentEditedImage, PSF, estimated_noise);
-currentEditedImage = wnr3;
 axes(handles.axesImage);
-imshow(currentEditedImage);
+imshow(wnr3)
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
@@ -796,10 +785,9 @@ function Rivert2OriginalPushbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to Rivert2OriginalPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global originalImage currentEditedImage;
-currentEditedImage = originalImage;
+global originalImage ;
 axes(handles.axesImage);
-imshow(currentEditedImage);
+imshow(originalImage);
 
 
 % --- Executes on button press in UndoLastEditPushbutton.
@@ -807,3 +795,211 @@ function UndoLastEditPushbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to UndoLastEditPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+
+
+% --- Executes on slider movement.
+function Wiener_Filter_Callback(hObject, eventdata, handles)
+% hObject    handle to Wiener_Filter (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global  originalImage sze;
+
+Kernel_Size = ceil(get(hObject,'Value')*10+1);
+filtered = originalImage;
+filtered(:,:,1) = wiener2(originalImage(:,:,1),[Kernel_Size Kernel_Size]);
+
+if(sze==3)
+  filtered(:,:,2) = wiener2(originalImage(:,:,2),[Kernel_Size Kernel_Size]);
+  filtered(:,:,3) = wiener2(originalImage(:,:,3),[Kernel_Size Kernel_Size]);
+end
+
+imshow(filtered);
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function Wiener_Filter_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to Wiener_Filter (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function fuzzy_Callback(hObject, eventdata, handles)
+% hObject    handle to fuzzy (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global sze originalImage
+h = ceil(get(hObject,'Value')*10 +2);
+
+condition = mod(h,2);
+if(condition==0)
+    h=h+1;
+end
+
+filtered  = zeros(size(originalImage));
+
+
+for num=1:1:sze
+f=(h-1)/2 ;   % padding value for window: f=1; f=2; f=3; f=4; f=5;
+
+F = zeros(h*h,1);
+Image = double(padarray(originalImage(:,:,num),[f f],'symmetric'));
+[m n ~] = size(originalImage(:,:,num));
+for i=1+f:1:m-f
+   for j=1+f:1:n-f
+       x=reshape(Image(i-f:i+f, j-f:j+f),[],1);
+       xmin = min(x);
+       xmav = mean(x);
+       xmax = max(x);
+       
+       F(:,:) = 0;
+       if (xmav-xmin==0)||(xmax-xmav==0)
+           F(:,:) = 1;
+       else
+           ind1 = find((x>=xmin)&(x<=xmav));
+           F(ind1) = 1-(xmav-x(ind1))/(xmav-xmin);
+           
+           ind2 = find((x>=xmav)&(x<=xmax));
+           F(ind2) = 1-(x(ind2)-xmav)/(xmax-xmav);
+       end
+        
+       filtered(i-f,j-f,num) = sum(sum(F.*x))/sum(sum(F));
+       clear xmax xmin xmav ind1 ind2;
+   end
+end
+
+end
+filtered = filtered(1:m-2*f,1:n-2*f,:);
+filtered =uint8(filtered);
+imshow(filtered)
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function fuzzy_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to fuzzy (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function ColourNoise_Callback(hObject, eventdata, handles)
+% hObject    handle to ColourNoise (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global originalImage sze  colour_slide luminance_slide;
+
+colour_slide = get(hObject,'Value')*10;
+colour_slide 
+luminance_slide
+if(sze==3)
+YCrCb_Image = rgb2ycbcr(originalImage);
+
+num =ceil(luminance_slide*10)+1;
+sigma =(colour_slide)+1;
+ker_size =ceil(3*sigma);
+
+filtered = YCrCb_Image;
+
+filtered1 = YCrCb_Image(:,:,1);
+Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
+filtered1 =imfilter(filtered1,Gauss,'same');
+filtered(:,:,1) =filtered1;
+
+
+filtered2 = YCrCb_Image(:,:,2);
+filtered2 =medfilt2(filtered2,[num num]);
+filtered(:,:,2) =filtered2;
+
+filtered3 = YCrCb_Image(:,:,3);
+filtered3 =medfilt2(filtered3,[num num]);
+filtered(:,:,3) =filtered3;
+
+final = ycbcr2rgb(filtered);
+imshow(final)
+end
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function ColourNoise_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to ColourNoise (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+
+
+
+
+% --- Executes on slider movement.
+function lumin_Callback(hObject, eventdata, handles)
+% hObject    handle to lumin (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global originalImage sze  colour_slide luminance_slide;
+
+luminance_slide = get(hObject,'Value')*10;
+colour_slide 
+luminance_slide
+if(sze==3)
+YCrCb_Image = rgb2ycbcr(originalImage);
+
+num =ceil(luminance_slide*10)+1;
+sigma =(colour_slide)+1;
+ker_size =ceil(3*sigma);
+
+filtered = YCrCb_Image;
+
+filtered1 = YCrCb_Image(:,:,2);
+filtered1 =medfilt2(filtered1,[num num]);
+filtered(:,:,1) =filtered1;
+
+filtered2 = YCrCb_Image(:,:,1);
+Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
+filtered2 =imfilter(filtered2,Gauss,'same');
+filtered(:,:,2) =filtered2;
+
+
+
+
+
+
+final = ycbcr2rgb(filtered);
+imshow(final)
+end
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function lumin_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to lumin (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
