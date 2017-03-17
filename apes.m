@@ -466,7 +466,7 @@ axes(handles.axesImage);
 imshow(currentEditedImage);
 croppedImage = imcrop(currentEditedImage);
 currentEditedImage = croppedImage;
-axes(handles.axes2);
+axes(handles.axesImage);
 imshow(currentEditedImage);
 
 
@@ -1376,7 +1376,7 @@ function ColourNoise_Callback(hObject, eventdata, handles)
 global originalImage sze  colour_slide luminance_slide;
 
 colour_slide = get(hObject,'Value');
-
+if(luminance_slide>0 && colour_slide>0)
 if(sze==3)
 YCrCb_Image = rgb2ycbcr(originalImage);
 
@@ -1411,6 +1411,7 @@ axes(handles.axes2);
 plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
 set(handles.text10, 'String', 'Histogram');
 end
+end
 if (sze<3)
     msgbox(sprintf('This function is applicable only for coloured images'),'Error','Error');
     return
@@ -1439,7 +1440,7 @@ function luminanace_Callback(hObject, eventdata, handles)
 global originalImage sze  colour_slide luminance_slide;
 
 luminance_slide = get(hObject,'Value')*10;
-
+if(luminance_slide>0 && colour_slide>0)
 if(sze==3)
 YCrCb_Image = rgb2ycbcr(originalImage);
 
@@ -1475,6 +1476,7 @@ axes(handles.axes2);
 plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
 set(handles.text10, 'String', 'Histogram');
 
+end
 end
 if (sze<3)
     msgbox(sprintf('This function is applicable only for coloured images'),'Error','Error');
