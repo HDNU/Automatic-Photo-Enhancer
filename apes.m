@@ -1144,13 +1144,15 @@ function Gaussian_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage sze;
 val = get(hObject,'Value');
+filtered = currentEditedImage;
+if(val>0)
 filtered1 = currentEditedImage(:,:,1);
 sigma =(val)+1;
 ker = ceil(3*sigma);
 Gauss =fspecial('gaussian',[ker ker],sigma);
 filtered1 =imfilter(filtered1,Gauss,'same');
 
-filtered = currentEditedImage;
+
 filtered(:,:,1) =filtered1;
 
 if(sze==3)
@@ -1163,7 +1165,7 @@ filtered3 =imfilter(filtered3,Gauss,'same');
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
-
+end
 axes(handles.axesImage);
 imshow(filtered)
 if(sze==3)
@@ -1200,11 +1202,13 @@ global  originalImage sze;
 
 Kernel_Size = ceil(get(hObject,'Value')*10+1);
 filtered = originalImage;
+if(Kernel_Size>1)
 filtered(:,:,1) = wiener2(originalImage(:,:,1),[Kernel_Size Kernel_Size]);
 
 if(sze==3)
   filtered(:,:,2) = wiener2(originalImage(:,:,2),[Kernel_Size Kernel_Size]);
   filtered(:,:,3) = wiener2(originalImage(:,:,3),[Kernel_Size Kernel_Size]);
+end
 end
 axes(handles.axesImage);
 imshow(filtered);
@@ -1240,11 +1244,13 @@ function Median_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage sze;
 val = get(hObject,'Value');
+filtered = currentEditedImage;
+if(val>0)
 filtered1 = currentEditedImage(:,:,1);
 num =int64(val*10)+1;
 filtered1 =medfilt2(filtered1,[num num]);
 
-filtered = currentEditedImage;
+
 filtered(:,:,1) =filtered1;
 if(sze==3)
 filtered2 = currentEditedImage(:,:,2);
@@ -1255,6 +1261,7 @@ filtered3 =medfilt2(filtered3,[num num]);
 
 filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
+end
 end
 axes(handles.axesImage);
 imshow(filtered)
@@ -1290,13 +1297,14 @@ function fuzzy_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global sze originalImage
 h = ceil(get(hObject,'Value')*10 +2);
-
+filtered  = zeros(size(originalImage));
+if(h>0)
 condition = mod(h,2);
 if(condition==0)
     h=h+1;
 end
 
-filtered  = zeros(size(originalImage));
+
 
 
 for num=1:1:sze
@@ -1330,6 +1338,7 @@ end
 
 end
 filtered = filtered(1:m-2*f,1:n-2*f,:);
+end
 filtered =uint8(filtered);
 axes(handles.axesImage);
 f
@@ -1534,6 +1543,8 @@ function sharp_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage sze;
 val = get(hObject,'Value');
+filtered = currentEditedImage;
+if(val>0)
 filtered1 = currentEditedImage(:,:,1);
 sigma =(val)+1;
 
@@ -1543,7 +1554,7 @@ Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
 filtered1 =imfilter(filtered1,Gauss,'same');
 filtered1 = (1+val)*(currentEditedImage(:,:,1))- val*(filtered1);
 
-filtered = currentEditedImage;
+
 filtered(:,:,1) =filtered1;
 if(sze==3)
 filtered2 = currentEditedImage(:,:,2);
@@ -1559,6 +1570,7 @@ filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
 axes(handles.axesImage);
+end
 imshow(filtered)
 if(sze==3)
 axes(handles.axes2);

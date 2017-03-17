@@ -1431,7 +1431,7 @@ global originalImage sze  colour_slide luminance_slide;
 
 luminance_slide = get(hObject,'Value')*10;
 
-if(sze==3)
+if(sze==3 && lumi)
 YCrCb_Image = rgb2ycbcr(originalImage);
 
 num =ceil(colour_slide*10)+1;
@@ -1534,6 +1534,8 @@ function sharp_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage sze;
 val = get(hObject,'Value');
+filtered = currentEditedImage;
+if(val>0)
 filtered1 = currentEditedImage(:,:,1);
 sigma =(val)+1;
 
@@ -1543,7 +1545,7 @@ Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
 filtered1 =imfilter(filtered1,Gauss,'same');
 filtered1 = (1+val)*(currentEditedImage(:,:,1))- val*(filtered1);
 
-filtered = currentEditedImage;
+
 filtered(:,:,1) =filtered1;
 if(sze==3)
 filtered2 = currentEditedImage(:,:,2);
@@ -1559,6 +1561,7 @@ filtered(:,:,2) =filtered2;
 filtered(:,:,3) =filtered3;
 end
 axes(handles.axesImage);
+end
 imshow(filtered)
 if(sze==3)
 axes(handles.axes2);
