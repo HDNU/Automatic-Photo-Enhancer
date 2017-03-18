@@ -54,7 +54,7 @@ I = imread('default.jpg');
 axes(handles.axesImage);
 imshow(I);
 global vignetteAmount vignetteMidpoint;
-vignetteAmount = 0.5;
+vignetteAmount = 0;
 vignetteMidpoint = 0.5;
 
 % Choose default command line output for apes
@@ -326,7 +326,7 @@ function vignetteAmountSlider_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-global currentEditedImage vignetteAmount vignetteMidpoint;
+global currentEditedImage vignetteAmount vignetteMidpoint vignetteImage;
 vignetteAmount = 2*get(hObject,'Value')-1;
 [nr, nc, nChannels]=size(currentEditedImage);
 cx=ceil(nc/2);
@@ -351,10 +351,10 @@ for k = 1:nChannels
         end
     end
 end
-currentEditedImage = vignetteImage;
+% currentEditedImage = vignetteImage;
 axes(handles.axesImage);
-imshow(currentEditedImage);
-histrogramUpdate(handles, currentEditedImage);
+imshow(vignetteImage);
+histrogramUpdate(handles, vignetteImage);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -377,7 +377,7 @@ function vignetteMidpointSlider_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-global currentEditedImage vignetteAmount vignetteMidpoint;
+global currentEditedImage vignetteAmount vignetteMidpoint vignetteImage;
 vignetteMidpoint = get(hObject,'Value');
 [nr, nc, nChannels]=size(currentEditedImage);
 cx=ceil(nc/2);
@@ -402,10 +402,10 @@ for k = 1:nChannels
         end
     end
 end
-currentEditedImage = vignetteImage;
+% currentEditedImage = vignetteImage;
 axes(handles.axesImage);
-imshow(currentEditedImage);
-histrogramUpdate(handles, currentEditedImage);
+imshow(vignetteImage);
+histrogramUpdate(handles, vignetteImage);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -418,6 +418,18 @@ function vignetteMidpointSlider_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+
+
+% --- Executes on button press in vignetteDonePushbutton.
+function vignetteDonePushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to vignetteDonePushbutton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global currentEditedImage vignetteImage;
+currentEditedImage = vignetteImage;
+axes(handles.axesImage);
+imshow(currentEditedImage);
+histrogramUpdate(handles, currentEditedImage);
 
 
 
