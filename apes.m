@@ -78,9 +78,9 @@ function varargout = apes_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 
-% --- Executes on button press in selectPicture.
-function selectPicture_Callback(hObject, eventdata, handles)
-% hObject    handle to selectPicture (see GCBO)
+% --- Executes on button press in selectPicturePushbutton.
+function selectPicturePushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to selectPicturePushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage originalImage hueImage satImage colour_slide luminance_slide;
@@ -145,8 +145,8 @@ end
 
 
 
-% --- Executes on button press in Histograms.
-function Histograms_Callback(hObject, eventdata, handles)
+% --- Executes on button press in histogramsPushbutton.
+function histogramsPushbutton_Callback(hObject, eventdata, handles)
 % h = uicontrol('Style','text','String','Hello world','Position',[200 420 100 20]);
 global currentEditedImage;
 % MultiSlider
@@ -169,7 +169,7 @@ global currentEditedImage;
     set(a(3),'FaceColor',[0 0 1]);
    
   
-% hObject    handle to Histograms (see GCBO)
+% hObject    handle to histogramsPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
@@ -344,8 +344,8 @@ end
 
 
 % --- Executes on slider movement.
-function slider12_Callback(hObject, eventdata, handles)
-% hObject    handle to slider12 (see GCBO)
+function expostureAdjustSlider_Callback(hObject, eventdata, handles)
+% hObject    handle to expostureAdjustSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage sze;
@@ -386,8 +386,8 @@ set(handles.text10, 'String', 'Histogram');
 
 
 % --- Executes during object creation, after setting all properties.
-function slider12_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to slider12 (see GCBO)
+function expostureAdjustSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to expostureAdjustSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -398,8 +398,8 @@ end
 
 
 % --- Executes on slider movement.
-function slider13_Callback(hObject, eventdata, handles)
-% hObject    handle to slider13 (see GCBO)
+function contrastAdjustSlider_Callback(hObject, eventdata, handles)
+% hObject    handle to contrastAdjustSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global  currentEditedImage sze;
@@ -441,8 +441,8 @@ set(handles.text10, 'String', 'Histogram');
 
 
 % --- Executes during object creation, after setting all properties.
-function slider13_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to slider13 (see GCBO)
+function contrastAdjustSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to contrastAdjustSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -452,9 +452,9 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
 end
 
 
-% --- Executes on button press in CropPushbutton.
-function CropPushbutton_Callback(hObject, eventdata, handles)
-% hObject    handle to CropPushbutton (see GCBO)
+% --- Executes on button press in cropPushbutton.
+function cropPushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to cropPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage satImage hueImage;
@@ -485,9 +485,9 @@ function text10_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 
 
-% --- Executes on button press in pushbutton13.
-function pushbutton13_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton13 (see GCBO)
+% --- Executes on button press in saveImagePushbutton.
+function saveImagePushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to saveImagePushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
@@ -504,8 +504,8 @@ saves =strcat(saves,'.jpg');
 imwrite(im, saves,'jpg')
 
 % --- Executes during object creation, after setting all properties.
-function selectPicture_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to selectPicture (see GCBO)
+function selectPicturePushbutton_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to selectPicturePushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -627,9 +627,9 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
 end
 
 
-% --- Executes on button press in Rivert2OriginalPushbutton.
-function Rivert2OriginalPushbutton_Callback(hObject, eventdata, handles)
-% hObject    handle to Rivert2OriginalPushbutton (see GCBO)
+% --- Executes on button press in rivert2OriginalPushbutton.
+function rivert2OriginalPushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to rivert2OriginalPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global originalImage currentEditedImage;
@@ -639,9 +639,9 @@ imshow(currentEditedImage);
 currentEditedImage = im2double(currentEditedImage);
 
 
-% --- Executes on button press in UndoLastEditPushbutton.
-function UndoLastEditPushbutton_Callback(hObject, eventdata, handles)
-% hObject    handle to UndoLastEditPushbutton (see GCBO)
+% --- Executes on button press in undoLastEditPushbutton.
+function undoLastEditPushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to undoLastEditPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
@@ -653,9 +653,9 @@ function UndoLastEditPushbutton_Callback(hObject, eventdata, handles)
 % --- Executes on slider movement.
 
 
-% --- Executes on button press in SetHue.
-function SetHue_Callback(hObject, eventdata, handles)
-% hObject    handle to SetHue (see GCBO)
+% --- Executes on button press in setHuePusshbutton.
+function setHuePusshbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to setHuePusshbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
@@ -687,9 +687,9 @@ else
  msgbox(sprintf('Input color Image'),'Error','Error');
 end
 
-% --- Executes on button press in Sat.
-function Sat_Callback(hObject, eventdata, handles)
-% hObject    handle to Sat (see GCBO)
+% --- Executes on button press in setSatPushbutton.
+function setSatPushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to setSatPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global satImage sat_min_val sat_max_val currentEditedImage ;
@@ -723,8 +723,8 @@ end
 
 
 
-% --- Executes on button press in Histeq1.
-function Histeq1_Callback(hObject, eventdata, handles)
+% --- Executes on button press in equalizationPushbutton.
+function equalizationPushbutton_Callback(hObject, eventdata, handles)
 global currentEditedImage;
 % Im3=rgb2gray(currentEditedImage);
 % Im3=histeq(Im3,64);
@@ -1031,26 +1031,26 @@ else
 end
 
 
-%-----------------metaData calculation-------------------------------------
+%-----------------metadataPushbutton calculation-------------------------------------
 
-% --- Executes on button press in metaData.
-function metaData_Callback(hObject, eventdata, handles)
-% hObject    handle to metaData (see GCBO)
+% --- Executes on button press in metadataPushbutton.
+function metadataPushbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to metadataPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global path;
 imageinfo(path);
-% hObject    handle to Histeq1 (see GCBO)
+% hObject    handle to equalizationPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 
-% --- Executes on button press in metaData.
+% --- Executes on button press in metadataPushbutton.
 
 
 % --- Executes on slider movement.
-function ShadowReco_Callback(hObject, eventdata, handles)
-% hObject    handle to ShadowReco (see GCBO)
+function shadowRecoSlider_Callback(hObject, eventdata, handles)
+% hObject    handle to shadowRecoSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
@@ -1124,8 +1124,8 @@ imshow(FinalImage);
 end
 
 % --- Executes during object creation, after setting all properties.
-function ShadowReco_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to ShadowReco (see GCBO)
+function shadowRecoSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to shadowRecoSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -1138,8 +1138,8 @@ end
 
 
 % --- Executes on slider movement.
-function Gaussian_Callback(hObject, eventdata, handles)
-% hObject    handle to Gaussian (see GCBO)
+function gaussianSlider_Callback(hObject, eventdata, handles)
+% hObject    handle to gaussianSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage sze;
@@ -1182,8 +1182,8 @@ end
 
 
 % --- Executes during object creation, after setting all properties.
-function Gaussian_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to Gaussian (see GCBO)
+function gaussianSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to gaussianSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -1194,8 +1194,8 @@ end
 
 
 % --- Executes on slider movement.
-function Wiener_Callback(hObject, eventdata, handles)
-% hObject    handle to Wiener (see GCBO)
+function wienerSlider_Callback(hObject, eventdata, handles)
+% hObject    handle to wienerSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global  originalImage sze;
@@ -1226,8 +1226,8 @@ end
 
 
 % --- Executes during object creation, after setting all properties.
-function Wiener_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to Wiener (see GCBO)
+function wienerSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to wienerSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -1238,8 +1238,8 @@ end
 
 
 % --- Executes on slider movement.
-function Median_Callback(hObject, eventdata, handles)
-% hObject    handle to Median (see GCBO)
+function medianSlider_Callback(hObject, eventdata, handles)
+% hObject    handle to medianSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage sze;
@@ -1279,8 +1279,8 @@ end
 
 
 % --- Executes during object creation, after setting all properties.
-function Median_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to Median (see GCBO)
+function medianSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to medianSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -1291,8 +1291,8 @@ end
 
 
 % --- Executes on slider movement.
-function fuzzy_Callback(hObject, eventdata, handles)
-% hObject    handle to fuzzy (see GCBO)
+function fuzzySlider_Callback(hObject, eventdata, handles)
+% hObject    handle to fuzzySlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global sze originalImage
@@ -1357,8 +1357,8 @@ end
 
 
 % --- Executes during object creation, after setting all properties.
-function fuzzy_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to fuzzy (see GCBO)
+function fuzzySlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to fuzzySlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -1369,8 +1369,8 @@ end
 
 
 % --- Executes on slider movement.
-function ColourNoise_Callback(hObject, eventdata, handles)
-% hObject    handle to ColourNoise (see GCBO)
+function colourNoiseSlider_Callback(hObject, eventdata, handles)
+% hObject    handle to colourNoiseSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global originalImage sze  colour_slide luminance_slide;
@@ -1421,8 +1421,8 @@ end
 
 
 % --- Executes during object creation, after setting all properties.
-function ColourNoise_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to ColourNoise (see GCBO)
+function colourNoiseSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to colourNoiseSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -1433,8 +1433,8 @@ end
 
 
 % --- Executes on slider movement.
-function luminanace_Callback(hObject, eventdata, handles)
-% hObject    handle to luminanace (see GCBO)
+function luminanaceNoiseSlider_Callback(hObject, eventdata, handles)
+% hObject    handle to luminanaceNoiseSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global originalImage sze  colour_slide luminance_slide;
@@ -1487,8 +1487,8 @@ end
 
 
 % --- Executes during object creation, after setting all properties.
-function luminanace_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to luminanace (see GCBO)
+function luminanaceNoiseSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to luminanaceNoiseSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -1499,8 +1499,8 @@ end
 
 
 % --- Executes on slider movement.
-function blur_removal_Callback(hObject, eventdata, handles)
-% hObject    handle to blur_removal (see GCBO)
+function blurRemovalSlider_Callback(hObject, eventdata, handles)
+% hObject    handle to blurRemovalSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage sze;
@@ -1527,8 +1527,8 @@ end
 
 
 % --- Executes during object creation, after setting all properties.
-function blur_removal_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to blur_removal (see GCBO)
+function blurRemovalSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to blurRemovalSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -1539,8 +1539,8 @@ end
 
 
 % --- Executes on slider movement.
-function sharp_Callback(hObject, eventdata, handles)
-% hObject    handle to sharp (see GCBO)
+function sharpenSlider_Callback(hObject, eventdata, handles)
+% hObject    handle to sharpenSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage sze;
@@ -1588,8 +1588,8 @@ end
 
 
 % --- Executes during object creation, after setting all properties.
-function sharp_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to sharp (see GCBO)
+function sharpenSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to sharpenSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
