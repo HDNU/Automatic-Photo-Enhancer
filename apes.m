@@ -53,9 +53,10 @@ function apes_OpeningFcn(hObject, eventdata, handles, varargin)
 I = imread('default.jpg');
 axes(handles.axesImage);
 imshow(I);
-global vignetteAmount vignetteMidpoint;
+global vignetteAmount vignetteMidpoint vignetteFeather;
 vignetteAmount = 0;
 vignetteMidpoint = 0.5;
+vignetteFeather = 0.5;
 
 % Choose default command line output for apes
 handles.output = hObject;
@@ -330,7 +331,7 @@ function vignetteAmountSlider_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-global currentEditedImage vignetteAmount vignetteMidpoint vignetteImage;
+global currentEditedImage vignetteAmount vignetteMidpoint vignetteImage vignetteFeather;
 vignetteAmount = 2*get(hObject,'Value')-1;
 [nr, nc, nChannels]=size(currentEditedImage);
 cx=ceil(nc/2);
@@ -347,9 +348,9 @@ for k = 1:nChannels
             if(distanceFromCenter>radius)
                 scale= abs(vignetteAmount*(distanceFromCenter-radius)/maxDistance);
                 if (vignetteAmount<0)
-                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)*(1-scale)-5*scale;
+                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)*(1-scale)-vignetteFeather*2*scale;
                 else
-                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)/(1-scale)+ 5*scale;
+                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)/(1-scale)+vignetteFeather*2*scale;
                 end
             end
         end
@@ -381,7 +382,7 @@ function vignetteMidpointSlider_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-global currentEditedImage vignetteAmount vignetteMidpoint vignetteImage;
+global currentEditedImage vignetteAmount vignetteMidpoint vignetteImage vignetteFeather;
 vignetteMidpoint = get(hObject,'Value');
 [nr, nc, nChannels]=size(currentEditedImage);
 cx=ceil(nc/2);
@@ -398,9 +399,9 @@ for k = 1:nChannels
             if(distanceFromCenter>radius)
                 scale= abs(vignetteAmount*(distanceFromCenter-radius)/maxDistance);
                 if (vignetteAmount<0)
-                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)*(1-scale)-5*scale;
+                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)*(1-scale)-vignetteFeather*2*scale;
                 else
-                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)/(1-scale)+5*scale;
+                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)/(1-scale)+vignetteFeather*2*scale;
                 end
             end
         end
@@ -424,6 +425,58 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
 end
 
 
+
+% --- Executes on slider movement.
+function vignetteFeatherSlider_Callback(hObject, eventdata, handles)
+% hObject    handle to vignetteFeatherSlider (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+global currentEditedImage vignetteAmount vignetteMidpoint vignetteImage vignetteFeather;
+vignetteFeather = -1*get(hObject,'Value')+1;
+[nr, nc, nChannels]=size(currentEditedImage);
+cx=ceil(nc/2);
+cy=ceil(nr/2);
+
+radius = vignetteMidpoint*max(cx,cy);
+maxDistance = sqrt(cx.^2 + cy.^2)-radius;
+
+vignetteImage=currentEditedImage;
+for k = 1:nChannels
+    for i=1:nr
+        for j=1:nc
+            distanceFromCenter = sqrt((abs(i-cy).^2)+(abs(j-cx).^2));
+            if(distanceFromCenter>radius)
+                scale= abs(vignetteAmount*(distanceFromCenter-radius)/maxDistance);
+                if (vignetteAmount<0)
+                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)*(1-scale)-vignetteFeather*2*scale;
+                else
+                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)/(1-scale)+vignetteFeather*2*scale;
+                end
+            end
+        end
+    end
+end
+% currentEditedImage = vignetteImage;
+axes(handles.axesImage);
+imshow(vignetteImage);
+histrogramUpdate(handles, vignetteImage);
+
+
+% --- Executes during object creation, after setting all properties.
+function vignetteFeatherSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to vignetteFeatherSlider (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
 % --- Executes on button press in vignetteDonePushbutton.
 function vignetteDonePushbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to vignetteDonePushbutton (see GCBO)
@@ -436,6 +489,7 @@ imshow(currentEditedImage);
 histrogramUpdate(handles, currentEditedImage);
 set(handles.vignetteAmountSlider, 'value', 0.5);
 set(handles.vignetteMidpointSlider, 'value', 0.5);
+set(handles.vignetteFeatherSlider, 'value', 0.5);
 
 
 
@@ -1395,3 +1449,5 @@ function sharpenSlider_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+
+
