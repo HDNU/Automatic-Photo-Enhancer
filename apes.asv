@@ -85,8 +85,8 @@ function selectPicturePushbutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage originalImage hueImage satImage colour_slide luminance_slide;
 global path sze;
-colour_slide =1;
-luminance_slide=1;
+colour_slide =0;
+luminance_slide=0;
 [path, Cancel] = imgetfile();
 
 if Cancel
@@ -138,6 +138,8 @@ end
 % im2(:,:,3)=0.75;
 axes(handles.Saturation);
 imshow( satImage);
+
+histrogramUpdate(handles, currentEditedImage);
 end
 
 
@@ -162,22 +164,7 @@ function histogramsPushbutton_Callback(hObject, eventdata, handles)
 global currentEditedImage;
 % MultiSlider
 
-    %Split into RGB Channels
-    Red = currentEditedImage(:,:,1);
-    Green =currentEditedImage(:,:,2);
-    Blue = currentEditedImage(:,:,3);
-
-    %Get histValues for each channel
-    [yRed, x] = imhist(Red);
-    [yGreen, x] = imhist(Green);
-    [yBlue, x] = imhist(Blue);
-
-    %Plot them together in one plot
-    axes(handles.axesImage);
-    a=area([x,x,x],[yRed,yGreen,yBlue]);
-    set(a(1),'FaceColor',[1 0 0]);
-    set(a(2),'FaceColor',[0 1 0]);
-    set(a(3),'FaceColor',[0 0 1]);
+histrogramUpdate(handles, currentEditedImage);
    
   
 % hObject    handle to histogramsPushbutton (see GCBO)
@@ -217,13 +204,7 @@ currentEditedImage = filtered;
 axes(handles.axesImage);
 imshow(currentEditedImage);
 
-axes(handles.axes2);
-[yRed, x] = imhist(filtered(:,:,1));
-[yGreen, x] = imhist(filtered(:,:,2));
-[yBlue, x] = imhist(filtered(:,:,3));
-%Plot them together in one plot
-plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
-set(handles.text10, 'String', 'Histogram');
+histrogramUpdate(handles, filtered);
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
@@ -272,13 +253,7 @@ currentEditedImage = filtered;
 axes(handles.axesImage);
 imshow(currentEditedImage);
 
-axes(handles.axes2);
-[yRed, x] = imhist(filtered(:,:,1));
-[yGreen, x] = imhist(filtered(:,:,2));
-[yBlue, x] = imhist(filtered(:,:,3));
-%Plot them together in one plot
-plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
-set(handles.text10, 'String', 'Histogram');
+histrogramUpdate(handles, currentEditedImage);
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
@@ -312,6 +287,7 @@ currentEditedImage = croppedImage;
 axes(handles.axesImage);
 imshow(currentEditedImage);
 
+histrogramUpdate(handles, currentEditedImage);
 
 
 % --- Executes on button press in saveImagePushbutton.
@@ -378,6 +354,7 @@ end
 currentEditedImage = vignetteImage;
 axes(handles.axesImage);
 imshow(currentEditedImage);
+histrogramUpdate(handles, currentEditedImage);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -428,6 +405,7 @@ end
 currentEditedImage = vignetteImage;
 axes(handles.axesImage);
 imshow(currentEditedImage);
+histrogramUpdate(handles, currentEditedImage);
 
 
 % --- Executes during object creation, after setting all properties.
@@ -453,6 +431,7 @@ currentEditedImage = originalImage;
 axes(handles.axesImage);
 imshow(currentEditedImage);
 currentEditedImage = im2double(currentEditedImage);
+histrogramUpdate(handles, currentEditedImage);
 
 
 % --- Executes on button press in undoLastEditPushbutton.
@@ -460,6 +439,8 @@ function undoLastEditPushbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to undoLastEditPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+global cure
+histrogramUpdate(handles, currentEditedImage);
 
 
 
@@ -489,7 +470,7 @@ ImageHSV1(:,:,1)=hue_min_val + (ImageHSV(:,:,1))*(hue_max_val-hue_min_val);
 ImageHSV1(:,:,2)=ImageHSV(:,:,2);
 ImageHSV1(:,:,3)=ImageHSV(:,:,3);
 
-axes(handles.axes2);
+axes(handles.histrogramAreaAxes);
 imshow(croppedImage);
 axes(handles.axesImage);
 imshow(ImageHSV1);
@@ -521,7 +502,7 @@ ImageHSV1(:,:,2)=sat_min_val + (ImageHSV(:,:,2))*(sat_max_val-sat_min_val);
 ImageHSV1(:,:,1)=ImageHSV(:,:,1);
 ImageHSV1(:,:,3)=ImageHSV(:,:,3);
 
-axes(handles.axes2);
+axes(handles.histrogramAreaAxes);
 imshow(croppedImage);
 axes(handles.axesImage);
 imshow(ImageHSV1);
@@ -542,7 +523,7 @@ global currentEditedImage;
 size2=size(currentEditedImage);
 size2(3)=1;
 xq=0:1/255:1;
-axes(handles.axes2);
+axes(handles.histrogramAreaAxes);
 x1=[0;1];
 y1=[0;1];
 vq1 = interp1(x1,y1,xq,'linear');
@@ -973,13 +954,7 @@ end
 axes(handles.axesImage);
 imshow(filtered)
 if(sze==3)
-axes(handles.axes2);
-[yRed, x] = imhist(filtered(:,:,1));
-[yGreen, x] = imhist(filtered(:,:,2));
-[yBlue, x] = imhist(filtered(:,:,3));
-%Plot them together in one plot
-plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
-set(handles.text10, 'String', 'Histogram');
+histrogramUpdate(handles, filtered);
 end
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
@@ -1017,13 +992,7 @@ end
 axes(handles.axesImage);
 imshow(filtered);
 if(sze==3)
-axes(handles.axes2);
-[yRed, x] = imhist(filtered(:,:,1));
-[yGreen, x] = imhist(filtered(:,:,2));
-[yBlue, x] = imhist(filtered(:,:,3));
-%Plot them together in one plot
-plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
-set(handles.text10, 'String', 'Histogram');
+histrogramUpdate(handles, filtered);
 end
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
@@ -1070,13 +1039,7 @@ end
 axes(handles.axesImage);
 imshow(filtered)
 if(sze==3)
-axes(handles.axes2);
-[yRed, x] = imhist(filtered(:,:,1));
-[yGreen, x] = imhist(filtered(:,:,2));
-[yBlue, x] = imhist(filtered(:,:,3));
-%Plot them together in one plot
-plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
-set(handles.text10, 'String', 'Histogram');
+histrogramUpdate(handles, filtered);
 end
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
@@ -1112,7 +1075,7 @@ end
 for num=1:1:sze
 pad=(h-1)/2 ;   % padding value for window: f=1; f=2; f=3; f=4; f=5;
 
-F = zeros(h*h,1);
+block = zeros(h*h,1);
 Image = double(padarray(originalImage(:,:,num),[pad pad],'symmetric'));
 [m n ~] = size(originalImage(:,:,num));
 for i=1+pad:1:m-pad
@@ -1122,18 +1085,18 @@ for i=1+pad:1:m-pad
        block_avg = mean(x);
        block_max = max(x);
        
-       F(:,:) = 0;
+       block(:,:) = 0;
        if (block_avg-block_min==0)||(block_max-block_avg==0)
-           F(:,:) = 1;
+           block(:,:) = 1;
        else
            ind1 = find((x>=block_min)&(x<=block_avg));
-           F(ind1) = 1-(block_avg-x(ind1))/(block_avg-block_min);
+           block(ind1) = 1-(block_avg-x(ind1))/(block_avg-block_min);
            
            ind2 = find((x>=block_avg)&(x<=block_max));
-           F(ind2) = 1-(x(ind2)-block_avg)/(block_max-block_avg);
+           block(ind2) = 1-(x(ind2)-block_avg)/(block_max-block_avg);
        end
         
-       filtered(i-pad,j-pad,num) = sum(sum(F.*x))/sum(sum(F));
+       filtered(i-pad,j-pad,num) = sum(sum(block.*x))/sum(sum(block));
        clear xmax xmin xmav ind1 ind2;
    end
 end
@@ -1143,16 +1106,9 @@ filtered = filtered(1:m-2*pad,1:n-2*pad,:);
 end
 filtered =uint8(filtered);
 axes(handles.axesImage);
-pad
 imshow(filtered)
 if(sze==3)
-axes(handles.axes2);
-[yRed, x] = imhist(filtered(:,:,1));
-[yGreen, x] = imhist(filtered(:,:,2));
-[yBlue, x] = imhist(filtered(:,:,3));
-%Plot them together in one plot
-plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
-set(handles.text10, 'String', 'Histogram');
+histrogramUpdate(handles, filtered);
 end
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
@@ -1176,7 +1132,8 @@ function colourNoiseSlider_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global originalImage sze  colour_slide luminance_slide;
-
+axes(handles.axesImage);
+imshow(originalImage)
 colour_slide = get(hObject,'Value');
 if(luminance_slide>0 && colour_slide>0)
 if(sze==3)
@@ -1205,13 +1162,7 @@ filtered(:,:,3) =filtered3;
 final = ycbcr2rgb(filtered);
 axes(handles.axesImage);
 imshow(final)
-axes(handles.axes2);
-[yRed, x] = imhist(final(:,:,1));
-[yGreen, x] = imhist(final(:,:,2));
-[yBlue, x] = imhist(final(:,:,3));
-%Plot them together in one plot
-plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
-set(handles.text10, 'String', 'Histogram');
+histrogramUpdate(handles, final);
 end
 end
 if (sze<3)
@@ -1240,7 +1191,8 @@ function luminanaceNoiseSlider_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global originalImage sze  colour_slide luminance_slide;
-
+axes(handles.axesImage);
+imshow(originalImage)
 luminance_slide = get(hObject,'Value')*10;
 if(luminance_slide>0 && colour_slide>0)
 if(sze==3)
@@ -1270,13 +1222,7 @@ final = ycbcr2rgb(filtered);
 axes(handles.axesImage);
 imshow(final)
 
-axes(handles.axes2);
-[yRed, x] = imhist(final(:,:,1));
-[yGreen, x] = imhist(final(:,:,2));
-[yBlue, x] = imhist(final(:,:,3));
-%Plot them together in one plot
-plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
-set(handles.text10, 'String', 'Histogram');
+histrogramUpdate(handles, final);
 
 end
 end
@@ -1316,13 +1262,7 @@ weiner = deconvwnr(currentEditedImage, filter, estimated_noise);
 axes(handles.axesImage);
 imshow(weiner)
 if(sze==3)
-axes(handles.axes2);
-[yRed, x] = imhist(weiner(:,:,1));
-[yGreen, x] = imhist(weiner(:,:,2));
-[yBlue, x] = imhist(weiner(:,:,3));
-%Plot them together in one plot
-plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
-set(handles.text10, 'String', 'Histogram');
+histrogramUpdate(handles, weiner);
 end
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
@@ -1377,13 +1317,7 @@ axes(handles.axesImage);
 end
 imshow(filtered)
 if(sze==3)
-axes(handles.axes2);
-[yRed, x] = imhist(filtered(:,:,1));
-[yGreen, x] = imhist(filtered(:,:,2));
-[yBlue, x] = imhist(filtered(:,:,3));
-%Plot them together in one plot
-plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
-set(handles.text10, 'String', 'Histogram');
+histrogramUpdate(handles, filtered);
 end
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
