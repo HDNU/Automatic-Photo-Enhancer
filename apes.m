@@ -434,6 +434,8 @@ currentEditedImage = vignetteImage;
 axes(handles.axesImage);
 imshow(currentEditedImage);
 histrogramUpdate(handles, currentEditedImage);
+set(handles.vignetteAmountSlider, 'value', 0.5);
+set(handles.vignetteMidpointSlider, 'value', 0.5);
 
 
 
