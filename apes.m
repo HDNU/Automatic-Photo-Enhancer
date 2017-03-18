@@ -26,11 +26,11 @@ function varargout = apes(varargin)
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
-                   'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @apes_OpeningFcn, ...
-                   'gui_OutputFcn',  @apes_OutputFcn, ...
-                   'gui_LayoutFcn',  [] , ...
-                   'gui_Callback',   []);
+    'gui_Singleton',  gui_Singleton, ...
+    'gui_OpeningFcn', @apes_OpeningFcn, ...
+    'gui_OutputFcn',  @apes_OutputFcn, ...
+    'gui_LayoutFcn',  [] , ...
+    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
     gui_State.gui_Callback = str2func(varargin{1});
 end
@@ -50,12 +50,12 @@ function apes_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to apes (see VARARGIN)
- I = imread('default.jpg');
- axes(handles.axesImage);
- imshow(I);
- global vignetteAmount vignetteMidpoint;
- vignetteAmount = 0.5;
- vignetteMidpoint = 0.5;
+I = imread('default.jpg');
+axes(handles.axesImage);
+imshow(I);
+global vignetteAmount vignetteMidpoint;
+vignetteAmount = 0.5;
+vignetteMidpoint = 0.5;
 
 % Choose default command line output for apes
 handles.output = hObject;
@@ -68,7 +68,7 @@ guidata(hObject, handles);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = apes_OutputFcn(hObject, eventdata, handles) 
+function varargout = apes_OutputFcn(hObject, eventdata, handles)
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -94,11 +94,11 @@ if Cancel
     return
 end
 currentEditedImage = imread(path);
-originalImage = currentEditedImage;
 currentEditedImage = im2double(currentEditedImage);
+originalImage = currentEditedImage;
 sze = size(currentEditedImage);
 if (length(sze)==2)
-  sze=[sze,1];
+    sze=[sze,1];
 end
 sze = sze(3);
 axes(handles.axesImage);
@@ -109,37 +109,37 @@ if (length(size2)==2)
     size2=[size2,1];
 end
 if (size2(1,3)==3)
-hueImage=rgb2hsv(currentEditedImage);
-step=round(size2(1,2)/200);
-i=0;
-for l=1:step:200*step
+    hueImage=rgb2hsv(currentEditedImage);
+    step=round(size2(1,2)/200);
+    i=0;
+    for l=1:step:200*step
+        
+        hueImage(:,l,1)=i/200;
+        i=i+1;
+    end
     
-    hueImage(:,l,1)=i/200;
-    i=i+1;
-end
-
-hueImage=hueImage(1:20,1:step:200*step,:) ;
-
-% im2(:,:,2)=0.75;
-% im2(:,:,3)=0.75;
-axes(handles.Hue);
-imshow(hueImage);
-
-satImage=rgb2hsv(currentEditedImage);
-i=0;
-for l=1:step:200*step
-    satImage(1,l,2)=i/200;
-     i=i+1;
-end
-
- satImage= satImage(1:20,1:step:200*step,:) ;
-
-% im2(:,:,2)=0.75;
-% im2(:,:,3)=0.75;
-axes(handles.Saturation);
-imshow( satImage);
-
-histrogramUpdate(handles, currentEditedImage);
+    hueImage=hueImage(1:20,1:step:200*step,:) ;
+    
+    % im2(:,:,2)=0.75;
+    % im2(:,:,3)=0.75;
+    axes(handles.Hue);
+    imshow(hueImage);
+    
+    satImage=rgb2hsv(currentEditedImage);
+    i=0;
+    for l=1:step:200*step
+        satImage(1,l,2)=i/200;
+        i=i+1;
+    end
+    
+    satImage= satImage(1:20,1:step:200*step,:) ;
+    
+    % im2(:,:,2)=0.75;
+    % im2(:,:,3)=0.75;
+    axes(handles.Saturation);
+    imshow( satImage);
+    
+    histrogramUpdate(handles, currentEditedImage);
 end
 
 
@@ -165,8 +165,8 @@ global currentEditedImage;
 % MultiSlider
 
 histrogramUpdate(handles, currentEditedImage);
-   
-  
+
+
 % hObject    handle to histogramsPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -190,15 +190,15 @@ filtered1 =255.0*c*((filtered1/255.0).^gamma);
 filtered = currentEditedImage;
 filtered(:,:,1) =filtered1;
 if(sze==3)
-filtered2 = currentEditedImage(:,:,2);
-filtered3 = currentEditedImage(:,:,3);
-
-filtered2 =255.0*c*((filtered2/255.0).^gamma);
-filtered3 =255.0*c*((filtered3/255.0).^gamma);
-
-
-filtered(:,:,2) =filtered2;
-filtered(:,:,3) =filtered3;
+    filtered2 = currentEditedImage(:,:,2);
+    filtered3 = currentEditedImage(:,:,3);
+    
+    filtered2 =255.0*c*((filtered2/255.0).^gamma);
+    filtered3 =255.0*c*((filtered3/255.0).^gamma);
+    
+    
+    filtered(:,:,2) =filtered2;
+    filtered(:,:,3) =filtered3;
 end
 currentEditedImage = filtered;
 axes(handles.axesImage);
@@ -237,16 +237,16 @@ filtered1 =uint8(F*(filtered1-128)+128);
 filtered = currentEditedImage;
 filtered(:,:,1) =filtered1;
 if(sze==3)
-filtered2 = currentEditedImage(:,:,2);
-filtered3 = currentEditedImage(:,:,3);
-
-
-filtered2 =uint8(F*(filtered2-128)+128);
-filtered3 =uint8(F*(filtered3-128)+128);
-
-
-filtered(:,:,2) =filtered2;
-filtered(:,:,3) =filtered3;
+    filtered2 = currentEditedImage(:,:,2);
+    filtered3 = currentEditedImage(:,:,3);
+    
+    
+    filtered2 =uint8(F*(filtered2-128)+128);
+    filtered3 =uint8(F*(filtered3-128)+128);
+    
+    
+    filtered(:,:,2) =filtered2;
+    filtered(:,:,3) =filtered3;
 end
 
 currentEditedImage = filtered;
@@ -433,6 +433,12 @@ imshow(currentEditedImage);
 currentEditedImage = im2double(currentEditedImage);
 histrogramUpdate(handles, currentEditedImage);
 
+% set default in color profile option
+clearPushButton(handles);
+set(handles.Default,'Value',1);
+
+
+
 
 % --- Executes on button press in undoLastEditPushbutton.
 function undoLastEditPushbutton_Callback(hObject, eventdata, handles)
@@ -457,25 +463,25 @@ if (length(size2)==2)
 end
 if (size2(3)==3)
     
-axes(handles.Hue);
-imshow(hueImage);
-croppedImage = imcrop(hueImage);
-
-sze = size(croppedImage);
-hue_min_val = croppedImage(1,1,1);
-hue_max_val =croppedImage(1,sze(2),1);
-
-ImageHSV = rgb2hsv(currentEditedImage);
-ImageHSV1(:,:,1)=hue_min_val + (ImageHSV(:,:,1))*(hue_max_val-hue_min_val);
-ImageHSV1(:,:,2)=ImageHSV(:,:,2);
-ImageHSV1(:,:,3)=ImageHSV(:,:,3);
-
-axes(handles.histrogramAreaAxes);
-imshow(croppedImage);
-axes(handles.axesImage);
-imshow(ImageHSV1);
+    axes(handles.Hue);
+    imshow(hueImage);
+    croppedImage = imcrop(hueImage);
+    
+    sze = size(croppedImage);
+    hue_min_val = croppedImage(1,1,1);
+    hue_max_val =croppedImage(1,sze(2),1);
+    
+    ImageHSV = rgb2hsv(currentEditedImage);
+    ImageHSV1(:,:,1)=hue_min_val + (ImageHSV(:,:,1))*(hue_max_val-hue_min_val);
+    ImageHSV1(:,:,2)=ImageHSV(:,:,2);
+    ImageHSV1(:,:,3)=ImageHSV(:,:,3);
+    
+    axes(handles.histrogramAreaAxes);
+    imshow(croppedImage);
+    axes(handles.axesImage);
+    imshow(ImageHSV1);
 else
- msgbox(sprintf('Input color Image'),'Error','Error');
+    msgbox(sprintf('Input color Image'),'Error','Error');
 end
 
 % --- Executes on button press in setSatPushbutton.
@@ -489,25 +495,25 @@ if (length(size2)==2)
     size2=[size2,1];
 end
 if (size2(3)==3)
-axes(handles.Saturation);
-imshow(satImage);
-croppedImage = imcrop(satImage);
-
-sze = size(croppedImage);
-sat_min_val = croppedImage(1,1,2);
-sat_max_val =croppedImage(1,sze(2),2);
-
-ImageHSV = rgb2hsv(currentEditedImage);
-ImageHSV1(:,:,2)=sat_min_val + (ImageHSV(:,:,2))*(sat_max_val-sat_min_val);
-ImageHSV1(:,:,1)=ImageHSV(:,:,1);
-ImageHSV1(:,:,3)=ImageHSV(:,:,3);
-
-axes(handles.histrogramAreaAxes);
-imshow(croppedImage);
-axes(handles.axesImage);
-imshow(ImageHSV1);
+    axes(handles.Saturation);
+    imshow(satImage);
+    croppedImage = imcrop(satImage);
+    
+    sze = size(croppedImage);
+    sat_min_val = croppedImage(1,1,2);
+    sat_max_val =croppedImage(1,sze(2),2);
+    
+    ImageHSV = rgb2hsv(currentEditedImage);
+    ImageHSV1(:,:,2)=sat_min_val + (ImageHSV(:,:,2))*(sat_max_val-sat_min_val);
+    ImageHSV1(:,:,1)=ImageHSV(:,:,1);
+    ImageHSV1(:,:,3)=ImageHSV(:,:,3);
+    
+    axes(handles.histrogramAreaAxes);
+    imshow(croppedImage);
+    axes(handles.axesImage);
+    imshow(ImageHSV1);
 else
- msgbox(sprintf('Input color Image'),'Error','Error');
+    msgbox(sprintf('Input color Image'),'Error','Error');
 end
 
 
@@ -529,26 +535,26 @@ y1=[0;1];
 vq1 = interp1(x1,y1,xq,'linear');
 plot (xq,vq1);
 for i=1:4
-[x y]=ginput(1);
-x1=[x1;x];
-y1=[y1;y];
-vq1 = interp1(x1,y1,xq,'splaine');
-equalizedImage=zeros(size2(1),size2(2));
-plot (xq,vq1);
-vq1=uint8(vq1*256);
-grayImage=(uint8(currentEditedImage*255));
-
-for i=1:size2(1)
-    for j=1:size2(2)
-     for k=1:3
-            equalizedImage(i,j,k)=vq1(1,grayImage(i,j,k)+1);
-     end
+    [x y]=ginput(1);
+    x1=[x1;x];
+    y1=[y1;y];
+    vq1 = interp1(x1,y1,xq,'splaine');
+    equalizedImage=zeros(size2(1),size2(2));
+    plot (xq,vq1);
+    vq1=uint8(vq1*256);
+    grayImage=(uint8(currentEditedImage*255));
+    
+    for i=1:size2(1)
+        for j=1:size2(2)
+            for k=1:3
+                equalizedImage(i,j,k)=vq1(1,grayImage(i,j,k)+1);
+            end
+        end
     end
-end
-equalizedImage=equalizedImage/255;
-axes(handles.axesImage);
-imshow(equalizedImage);
-
+    equalizedImage=equalizedImage/255;
+    axes(handles.axesImage);
+    imshow(equalizedImage);
+    
 end
 currentEditedImage=equalizedImage;
 
@@ -559,25 +565,26 @@ function Lab_to_sRGB_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of Lab_to_sRGB
 global currentEditedImage;
-i1 = currentEditedImage;
+global originalImage;
+i1 = originalImage;
 hcsc = vision.ColorSpaceConverter;
 
 if get(hObject,'Value')
     clearPushButton(handles);
     set(handles.Lab_to_sRGB,'Value',1);
-   try
+    try
         hcsc.Conversion = 'L*a*b* to sRGB';
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
-         currentEditedImage=i2;
-    histrogramUpdate(handles, currentEditedImage);
+        currentEditedImage=i2;
+        histrogramUpdate(handles, currentEditedImage);
         
-   catch
-       uiwait(msgbox('This conversion is not valid','Error'));
-   end
-   
-
+    catch
+        uiwait(msgbox('This conversion is not valid','Error'));
+    end
+    
+    
 else
     
 end
@@ -591,7 +598,8 @@ function sRGB_to_Lab_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of sRGB_to_Lab
 global currentEditedImage;
-i1 = currentEditedImage;
+global originalImage;
+i1 = originalImage;
 hcsc = vision.ColorSpaceConverter;
 
 if get(hObject,'Value')
@@ -602,8 +610,8 @@ if get(hObject,'Value')
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
-         currentEditedImage=i2;
-    histrogramUpdate(handles, currentEditedImage);
+        currentEditedImage=i2;
+        histrogramUpdate(handles, currentEditedImage);
     catch
         uiwait(msgbox('This conversion is not valid','Error'));
         
@@ -621,7 +629,8 @@ function sRGB_to_XYZ_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of sRGB_to_XYZ
 global currentEditedImage;
-i1 = currentEditedImage;
+global originalImage;
+i1 = originalImage;
 hcsc = vision.ColorSpaceConverter;
 
 if get(hObject,'Value')
@@ -632,8 +641,8 @@ if get(hObject,'Value')
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
-         currentEditedImage=i2;
-    histrogramUpdate(handles, currentEditedImage);
+        currentEditedImage=i2;
+        histrogramUpdate(handles, currentEditedImage);
     catch
         uiwait(msgbox('This conversion is not valid','Error'));
         
@@ -651,7 +660,8 @@ function XYZ_to_sRGB_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of XYZ_to_sRGB
 global currentEditedImage;
-i1 = currentEditedImage;
+global originalImage;
+i1 = originalImage;
 hcsc = vision.ColorSpaceConverter;
 
 if get(hObject,'Value')
@@ -662,8 +672,8 @@ if get(hObject,'Value')
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
-         currentEditedImage=i2;
-    histrogramUpdate(handles, currentEditedImage);
+        currentEditedImage=i2;
+        histrogramUpdate(handles, currentEditedImage);
     catch
         uiwait(msgbox('This conversion is not valid','Error'));
         
@@ -680,12 +690,12 @@ function Default_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of Default
-global currentEditedImage;
+global originalImage;
 axes(handles.axesImage);
-imshow(currentEditedImage);
+imshow(originalImage);
 clearPushButton(handles);
 set(handles.Default,'Value',1);
-    histrogramUpdate(handles, currentEditedImage);
+histrogramUpdate(handles, originalImage);
 
 
 % --- Executes on button press in RGB_to_intensity.
@@ -696,7 +706,8 @@ function RGB_to_intensity_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of RGB_to_intensity
 global currentEditedImage;
-i1 = currentEditedImage;
+global originalImage;
+i1 = originalImage;
 hcsc = vision.ColorSpaceConverter;
 
 if get(hObject,'Value')
@@ -708,8 +719,8 @@ if get(hObject,'Value')
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
-         currentEditedImage=i2;
-    histrogramUpdate(handles, currentEditedImage);
+        currentEditedImage=i2;
+%         histrogramUpdate(handles, currentEditedImage);
     catch
         uiwait(msgbox('This conversion is not valid','Error'));
         
@@ -728,7 +739,8 @@ function YCbCr_to_RGB_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of YCbCr_to_RGB
 global currentEditedImage;
-i1 = currentEditedImage;
+global originalImage;
+i1 = originalImage;
 hcsc = vision.ColorSpaceConverter;
 
 if get(hObject,'Value')
@@ -739,8 +751,8 @@ if get(hObject,'Value')
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
-         currentEditedImage=i2;
-    histrogramUpdate(handles, currentEditedImage);
+        currentEditedImage=i2;
+        histrogramUpdate(handles, currentEditedImage);
     catch
         uiwait(msgbox('This conversion is not valid','Error'));
         
@@ -758,7 +770,8 @@ function RGB_to_YCbCr_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of RGB_to_YCbCr
 global currentEditedImage;
-i1 = currentEditedImage;
+global originalImage;
+i1 = originalImage;
 hcsc = vision.ColorSpaceConverter;
 
 if get(hObject,'Value')
@@ -769,8 +782,8 @@ if get(hObject,'Value')
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
-         currentEditedImage=i2;
-    histrogramUpdate(handles, currentEditedImage);
+        currentEditedImage=i2;
+        histrogramUpdate(handles, currentEditedImage);
     catch
         uiwait(msgbox('This conversion is not valid','Error'));
         
@@ -788,7 +801,8 @@ function RGB_to_HSV_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of RGB_to_HSV
 global currentEditedImage;
-i1 = currentEditedImage;
+global originalImage;
+i1 = originalImage;
 hcsc = vision.ColorSpaceConverter;
 if get(hObject,'Value')
     clearPushButton(handles);
@@ -798,8 +812,8 @@ if get(hObject,'Value')
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
-         currentEditedImage=i2;
-    histrogramUpdate(handles, currentEditedImage);
+        currentEditedImage=i2;
+        histrogramUpdate(handles, currentEditedImage);
     catch
         uiwait(msgbox('This conversion is not valid','Error'));
         
@@ -819,7 +833,8 @@ function HSV_to_RGB_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of HSV_to_RGB
 global currentEditedImage;
-i1 = currentEditedImage;
+global originalImage;
+i1 = originalImage;
 hcsc = vision.ColorSpaceConverter;
 
 if get(hObject,'Value')
@@ -830,8 +845,8 @@ if get(hObject,'Value')
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
-         currentEditedImage=i2;
-    histrogramUpdate(handles, currentEditedImage);
+        currentEditedImage=i2;
+        histrogramUpdate(handles, currentEditedImage);
     catch
         uiwait(msgbox('This conversion is not valid','Error'));
         
@@ -876,62 +891,63 @@ if (length(size2)==2)
     size2=[size2,1];
 end
 if (size2(3)==3)
-red = currentEditedImage (:,:,1);
-green = currentEditedImage (:,:,2);
-blue = currentEditedImage (:,:,3);
-
-Rthreshold = graythresh(red);
-Gthreshold = graythresh(green);
-Bthreshold = graythresh(blue);
-
-bred = im2bw(red, Rthreshold*coef);
-bgreen = im2bw(green, Gthreshold*coef);
-bblue = im2bw(blue, Bthreshold*coef);
-
-bred = bwareaopen(bred,250);
-bgreen = bwareaopen(bgreen,250);
-bblue = bwareaopen(bblue,250);
-
-SE = strel('disk',10);
-redScale = imclose(bred,SE);
-greenScale = imclose(bgreen,SE);
-blueScale = imclose(bblue,SE);
-
-ScaleImage(:,:,1)=redScale;
-ScaleImage(:,:,2)=greenScale;
-ScaleImage(:,:,3)=blueScale;
-ScaleImage=ScaleImage+0.3;
-
-FinalImage= currentEditedImage .*ScaleImage;
-
-axes(handles.axesImage);
-imshow(FinalImage);
+    red = currentEditedImage (:,:,1);
+    green = currentEditedImage (:,:,2);
+    blue = currentEditedImage (:,:,3);
+    
+    Rthreshold = graythresh(red);
+    Gthreshold = graythresh(green);
+    Bthreshold = graythresh(blue);
+    
+    bred = im2bw(red, Rthreshold*coef);
+    bgreen = im2bw(green, Gthreshold*coef);
+    bblue = im2bw(blue, Bthreshold*coef);
+    
+    bred = bwareaopen(bred,250);
+    bgreen = bwareaopen(bgreen,250);
+    bblue = bwareaopen(bblue,250);
+    
+    SE = strel('disk',10);
+    redScale = imclose(bred,SE);
+    greenScale = imclose(bgreen,SE);
+    blueScale = imclose(bblue,SE);
+    
+    ScaleImage(:,:,1)=redScale;
+    ScaleImage(:,:,2)=greenScale;
+    ScaleImage(:,:,3)=blueScale;
+    ScaleImage=ScaleImage+0.3;
+    
+    FinalImage= currentEditedImage .*ScaleImage;
+    
+    axes(handles.axesImage);
+    imshow(FinalImage);
 else
-red = currentEditedImage (:,:,1);
-
-Rthreshold = graythresh(red);
-
-
-bred = im2bw(red, Rthreshold*coef);
-
-bred = bwareaopen(bred,250);
-
-
-SE = strel('disk',10);
-redScale = imclose(bred,SE);
-
-
-ScaleImage(:,:,1)=redScale;
-
-ScaleImage=ScaleImage+0.3;
-
-FinalImage= currentEditedImage.*ScaleImage;
-
-axes(handles.axesImage);
-imshow(FinalImage);
-
-    histrogramUpdate(handles, FinalImage);
+    red = currentEditedImage (:,:,1);
+    
+    Rthreshold = graythresh(red);
+    
+    
+    bred = im2bw(red, Rthreshold*coef);
+    
+    bred = bwareaopen(bred,250);
+    
+    
+    SE = strel('disk',10);
+    redScale = imclose(bred,SE);
+    
+    
+    ScaleImage(:,:,1)=redScale;
+    
+    ScaleImage=ScaleImage+0.3;
+    
+    FinalImage= currentEditedImage.*ScaleImage;
+    
+    axes(handles.axesImage);
+    imshow(FinalImage);
+    
+    
 end
+ histrogramUpdate(handles, FinalImage);
 
 % --- Executes during object creation, after setting all properties.
 function shadowRecoSlider_CreateFcn(hObject, eventdata, handles)
@@ -956,30 +972,30 @@ global currentEditedImage sze;
 val = get(hObject,'Value');
 filtered = currentEditedImage;
 if(val>0)
-filtered1 = currentEditedImage(:,:,1);
-sigma =(val)+1;
-ker = ceil(3*sigma);
-Gauss =fspecial('gaussian',[ker ker],sigma);
-filtered1 =imfilter(filtered1,Gauss,'same');
-
-
-filtered(:,:,1) =filtered1;
-
-if(sze==3)
-filtered2 = currentEditedImage(:,:,2);
-filtered3 = currentEditedImage(:,:,3);
-
-filtered2 =imfilter(filtered2,Gauss,'same');
-filtered3 =imfilter(filtered3,Gauss,'same');
-
-filtered(:,:,2) =filtered2;
-filtered(:,:,3) =filtered3;
-end
+    filtered1 = currentEditedImage(:,:,1);
+    sigma =(val)+1;
+    ker = ceil(3*sigma);
+    Gauss =fspecial('gaussian',[ker ker],sigma);
+    filtered1 =imfilter(filtered1,Gauss,'same');
+    
+    
+    filtered(:,:,1) =filtered1;
+    
+    if(sze==3)
+        filtered2 = currentEditedImage(:,:,2);
+        filtered3 = currentEditedImage(:,:,3);
+        
+        filtered2 =imfilter(filtered2,Gauss,'same');
+        filtered3 =imfilter(filtered3,Gauss,'same');
+        
+        filtered(:,:,2) =filtered2;
+        filtered(:,:,3) =filtered3;
+    end
 end
 axes(handles.axesImage);
 imshow(filtered)
 if(sze==3)
-histrogramUpdate(handles, filtered);
+    histrogramUpdate(handles, filtered);
 end
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
@@ -1007,17 +1023,17 @@ global  originalImage sze;
 Kernel_Size = ceil(get(hObject,'Value')*10+1);
 filtered = originalImage;
 if(Kernel_Size>1)
-filtered(:,:,1) = wiener2(originalImage(:,:,1),[Kernel_Size Kernel_Size]);
-
-if(sze==3)
-  filtered(:,:,2) = wiener2(originalImage(:,:,2),[Kernel_Size Kernel_Size]);
-  filtered(:,:,3) = wiener2(originalImage(:,:,3),[Kernel_Size Kernel_Size]);
-end
+    filtered(:,:,1) = wiener2(originalImage(:,:,1),[Kernel_Size Kernel_Size]);
+    
+    if(sze==3)
+        filtered(:,:,2) = wiener2(originalImage(:,:,2),[Kernel_Size Kernel_Size]);
+        filtered(:,:,3) = wiener2(originalImage(:,:,3),[Kernel_Size Kernel_Size]);
+    end
 end
 axes(handles.axesImage);
 imshow(filtered);
 if(sze==3)
-histrogramUpdate(handles, filtered);
+    histrogramUpdate(handles, filtered);
 end
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
@@ -1044,27 +1060,27 @@ global currentEditedImage sze;
 val = get(hObject,'Value');
 filtered = currentEditedImage;
 if(val>0)
-filtered1 = currentEditedImage(:,:,1);
-num =int64(val*10)+1;
-filtered1 =medfilt2(filtered1,[num num]);
-
-
-filtered(:,:,1) =filtered1;
-if(sze==3)
-filtered2 = currentEditedImage(:,:,2);
-filtered3 = currentEditedImage(:,:,3);
-
-filtered2 =medfilt2(filtered2,[num num]);
-filtered3 =medfilt2(filtered3,[num num]);
-
-filtered(:,:,2) =filtered2;
-filtered(:,:,3) =filtered3;
-end
+    filtered1 = currentEditedImage(:,:,1);
+    num =int64(val*10)+1;
+    filtered1 =medfilt2(filtered1,[num num]);
+    
+    
+    filtered(:,:,1) =filtered1;
+    if(sze==3)
+        filtered2 = currentEditedImage(:,:,2);
+        filtered3 = currentEditedImage(:,:,3);
+        
+        filtered2 =medfilt2(filtered2,[num num]);
+        filtered3 =medfilt2(filtered3,[num num]);
+        
+        filtered(:,:,2) =filtered2;
+        filtered(:,:,3) =filtered3;
+    end
 end
 axes(handles.axesImage);
 imshow(filtered)
 if(sze==3)
-histrogramUpdate(handles, filtered);
+    histrogramUpdate(handles, filtered);
 end
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
@@ -1091,49 +1107,49 @@ global sze originalImage
 h = ceil(get(hObject,'Value')*10 +2);
 filtered  = zeros(size(originalImage));
 if(h>0)
-condition = mod(h,2);
-if(condition==0)
-    h=h+1;
-end
-
-
-for num=1:1:sze
-pad=(h-1)/2 ;   % padding value for window: f=1; f=2; f=3; f=4; f=5;
-
-block = zeros(h*h,1);
-Image = double(padarray(originalImage(:,:,num),[pad pad],'symmetric'));
-[m n ~] = size(originalImage(:,:,num));
-for i=1+pad:1:m-pad
-   for j=1+pad:1:n-pad
-       x=reshape(Image(i-pad:i+pad, j-pad:j+pad),[],1);
-       block_min = min(x);
-       block_avg = mean(x);
-       block_max = max(x);
-       
-       block(:,:) = 0;
-       if (block_avg-block_min==0)||(block_max-block_avg==0)
-           block(:,:) = 1;
-       else
-           ind1 = find((x>=block_min)&(x<=block_avg));
-           block(ind1) = 1-(block_avg-x(ind1))/(block_avg-block_min);
-           
-           ind2 = find((x>=block_avg)&(x<=block_max));
-           block(ind2) = 1-(x(ind2)-block_avg)/(block_max-block_avg);
-       end
+    condition = mod(h,2);
+    if(condition==0)
+        h=h+1;
+    end
+    
+    
+    for num=1:1:sze
+        pad=(h-1)/2 ;   % padding value for window: f=1; f=2; f=3; f=4; f=5;
         
-       filtered(i-pad,j-pad,num) = sum(sum(block.*x))/sum(sum(block));
-       clear xmax xmin xmav ind1 ind2;
-   end
-end
-
-end
-filtered = filtered(1:m-2*pad,1:n-2*pad,:);
+        block = zeros(h*h,1);
+        Image = double(padarray(originalImage(:,:,num),[pad pad],'symmetric'));
+        [m n ~] = size(originalImage(:,:,num));
+        for i=1+pad:1:m-pad
+            for j=1+pad:1:n-pad
+                x=reshape(Image(i-pad:i+pad, j-pad:j+pad),[],1);
+                block_min = min(x);
+                block_avg = mean(x);
+                block_max = max(x);
+                
+                block(:,:) = 0;
+                if (block_avg-block_min==0)||(block_max-block_avg==0)
+                    block(:,:) = 1;
+                else
+                    ind1 = find((x>=block_min)&(x<=block_avg));
+                    block(ind1) = 1-(block_avg-x(ind1))/(block_avg-block_min);
+                    
+                    ind2 = find((x>=block_avg)&(x<=block_max));
+                    block(ind2) = 1-(x(ind2)-block_avg)/(block_max-block_avg);
+                end
+                
+                filtered(i-pad,j-pad,num) = sum(sum(block.*x))/sum(sum(block));
+                clear xmax xmin xmav ind1 ind2;
+            end
+        end
+        
+    end
+    filtered = filtered(1:m-2*pad,1:n-2*pad,:);
 end
 filtered =uint8(filtered);
 axes(handles.axesImage);
 imshow(filtered)
 if(sze==3)
-histrogramUpdate(handles, filtered);
+    histrogramUpdate(handles, filtered);
 end
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
@@ -1161,34 +1177,34 @@ axes(handles.axesImage);
 imshow(originalImage)
 colour_slide = get(hObject,'Value');
 if(luminance_slide>0 && colour_slide>0)
-if(sze==3)
-YCrCb_Image = rgb2ycbcr(originalImage);
-
-num =ceil(colour_slide *10)+1;
-sigma =(luminance_slide)+1;
-ker_size =ceil(3*sigma);
-
-filtered = YCrCb_Image;
-
-filtered1 = YCrCb_Image(:,:,1);
-Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
-filtered1 =imfilter(filtered1,Gauss,'same');
-filtered(:,:,1) =filtered1;
-
-
-filtered2 = YCrCb_Image(:,:,2);
-filtered2 =medfilt2(filtered2,[num num]);
-filtered(:,:,2) =filtered2;
-
-filtered3 = YCrCb_Image(:,:,3);
-filtered3 =medfilt2(filtered3,[num num]);
-filtered(:,:,3) =filtered3;
-
-final = ycbcr2rgb(filtered);
-axes(handles.axesImage);
-imshow(final)
-histrogramUpdate(handles, final);
-end
+    if(sze==3)
+        YCrCb_Image = rgb2ycbcr(originalImage);
+        
+        num =ceil(colour_slide *10)+1;
+        sigma =(luminance_slide)+1;
+        ker_size =ceil(3*sigma);
+        
+        filtered = YCrCb_Image;
+        
+        filtered1 = YCrCb_Image(:,:,1);
+        Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
+        filtered1 =imfilter(filtered1,Gauss,'same');
+        filtered(:,:,1) =filtered1;
+        
+        
+        filtered2 = YCrCb_Image(:,:,2);
+        filtered2 =medfilt2(filtered2,[num num]);
+        filtered(:,:,2) =filtered2;
+        
+        filtered3 = YCrCb_Image(:,:,3);
+        filtered3 =medfilt2(filtered3,[num num]);
+        filtered(:,:,3) =filtered3;
+        
+        final = ycbcr2rgb(filtered);
+        axes(handles.axesImage);
+        imshow(final)
+        histrogramUpdate(handles, final);
+    end
 end
 if (sze<3)
     msgbox(sprintf('This function is applicable only for coloured images'),'Error','Error');
@@ -1220,36 +1236,36 @@ axes(handles.axesImage);
 imshow(originalImage)
 luminance_slide = get(hObject,'Value')*10;
 if(luminance_slide>0 && colour_slide>0)
-if(sze==3)
-YCrCb_Image = rgb2ycbcr(originalImage);
-
-num =ceil(colour_slide*10)+1;
-sigma =(luminance_slide)+1;
-ker_size =ceil(3*sigma);
-
-filtered = YCrCb_Image;
-
-filtered1 = YCrCb_Image(:,:,1);
-Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
-filtered1 =imfilter(filtered1,Gauss,'same');
-filtered(:,:,1) =filtered1;
-
-
-filtered2 = YCrCb_Image(:,:,2);
-filtered2 =medfilt2(filtered2,[num num]);
-filtered(:,:,2) =filtered2;
-
-filtered3 = YCrCb_Image(:,:,3);
-filtered3 =medfilt2(filtered3,[num num]);
-filtered(:,:,3) =filtered3;
-
-final = ycbcr2rgb(filtered);
-axes(handles.axesImage);
-imshow(final)
-
-histrogramUpdate(handles, final);
-
-end
+    if(sze==3)
+        YCrCb_Image = rgb2ycbcr(originalImage);
+        
+        num =ceil(colour_slide*10)+1;
+        sigma =(luminance_slide)+1;
+        ker_size =ceil(3*sigma);
+        
+        filtered = YCrCb_Image;
+        
+        filtered1 = YCrCb_Image(:,:,1);
+        Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
+        filtered1 =imfilter(filtered1,Gauss,'same');
+        filtered(:,:,1) =filtered1;
+        
+        
+        filtered2 = YCrCb_Image(:,:,2);
+        filtered2 =medfilt2(filtered2,[num num]);
+        filtered(:,:,2) =filtered2;
+        
+        filtered3 = YCrCb_Image(:,:,3);
+        filtered3 =medfilt2(filtered3,[num num]);
+        filtered(:,:,3) =filtered3;
+        
+        final = ycbcr2rgb(filtered);
+        axes(handles.axesImage);
+        imshow(final)
+        
+        histrogramUpdate(handles, final);
+        
+    end
 end
 if (sze<3)
     msgbox(sprintf('This function is applicable only for coloured images'),'Error','Error');
@@ -1287,7 +1303,7 @@ weiner = deconvwnr(currentEditedImage, filter, estimated_noise);
 axes(handles.axesImage);
 imshow(weiner)
 if(sze==3)
-histrogramUpdate(handles, weiner);
+    histrogramUpdate(handles, weiner);
 end
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
@@ -1314,35 +1330,35 @@ global currentEditedImage sze;
 val = get(hObject,'Value');
 filtered = currentEditedImage;
 if(val>0)
-filtered1 = currentEditedImage(:,:,1);
-sigma =(val)+1;
-
-ker_size = ceil(3*sigma);
-
-Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
-filtered1 =imfilter(filtered1,Gauss,'same');
-filtered1 = (1+val)*(currentEditedImage(:,:,1))- val*(filtered1);
-
-
-filtered(:,:,1) =filtered1;
-if(sze==3)
-filtered2 = currentEditedImage(:,:,2);
-filtered3 = currentEditedImage(:,:,3);
-
-filtered2 =imfilter(filtered2,Gauss,'same');
-filtered3 =imfilter(filtered3,Gauss,'same');
-
-filtered2 = (1+val)*(currentEditedImage(:,:,2))- val*(filtered2);
-filtered3 = (1+val)*(currentEditedImage(:,:,3))- val*(filtered3);
-
-filtered(:,:,2) =filtered2;
-filtered(:,:,3) =filtered3;
-end
-axes(handles.axesImage);
+    filtered1 = currentEditedImage(:,:,1);
+    sigma =(val)+1;
+    
+    ker_size = ceil(3*sigma);
+    
+    Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
+    filtered1 =imfilter(filtered1,Gauss,'same');
+    filtered1 = (1+val)*(currentEditedImage(:,:,1))- val*(filtered1);
+    
+    
+    filtered(:,:,1) =filtered1;
+    if(sze==3)
+        filtered2 = currentEditedImage(:,:,2);
+        filtered3 = currentEditedImage(:,:,3);
+        
+        filtered2 =imfilter(filtered2,Gauss,'same');
+        filtered3 =imfilter(filtered3,Gauss,'same');
+        
+        filtered2 = (1+val)*(currentEditedImage(:,:,2))- val*(filtered2);
+        filtered3 = (1+val)*(currentEditedImage(:,:,3))- val*(filtered3);
+        
+        filtered(:,:,2) =filtered2;
+        filtered(:,:,3) =filtered3;
+    end
+    axes(handles.axesImage);
 end
 imshow(filtered)
 if(sze==3)
-histrogramUpdate(handles, filtered);
+    histrogramUpdate(handles, filtered);
 end
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
