@@ -142,18 +142,7 @@ end
 
 
 
-% --- Executes during object creation, after setting all properties.
-function text8_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to text8 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
 
-
-% --- Executes during object creation, after setting all properties.
-function text10_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to text10 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns calle
 
 
 % --- Executes on button press in histogramsPushbutton.
