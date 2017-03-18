@@ -85,8 +85,8 @@ function selectPicturePushbutton_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage originalImage hueImage satImage colour_slide luminance_slide;
 global path sze;
-colour_slide =1;
-luminance_slide=1;
+colour_slide =0;
+luminance_slide=0;
 [path, Cancel] = imgetfile();
 
 if Cancel
@@ -1110,40 +1110,39 @@ end
 
 
 for num=1:1:sze
-f=(h-1)/2 ;   % padding value for window: f=1; f=2; f=3; f=4; f=5;
+pad=(h-1)/2 ;   % padding value for window: f=1; f=2; f=3; f=4; f=5;
 
-F = zeros(h*h,1);
-Image = double(padarray(originalImage(:,:,num),[f f],'symmetric'));
+block = zeros(h*h,1);
+Image = double(padarray(originalImage(:,:,num),[pad pad],'symmetric'));
 [m n ~] = size(originalImage(:,:,num));
-for i=1+f:1:m-f
-   for j=1+f:1:n-f
-       x=reshape(Image(i-f:i+f, j-f:j+f),[],1);
-       xmin = min(x);
-       xmav = mean(x);
-       xmax = max(x);
+for i=1+pad:1:m-pad
+   for j=1+pad:1:n-pad
+       x=reshape(Image(i-pad:i+pad, j-pad:j+pad),[],1);
+       block_min = min(x);
+       block_avg = mean(x);
+       block_max = max(x);
        
-       F(:,:) = 0;
-       if (xmav-xmin==0)||(xmax-xmav==0)
-           F(:,:) = 1;
+       block(:,:) = 0;
+       if (block_avg-block_min==0)||(block_max-block_avg==0)
+           block(:,:) = 1;
        else
-           ind1 = find((x>=xmin)&(x<=xmav));
-           F(ind1) = 1-(xmav-x(ind1))/(xmav-xmin);
+           ind1 = find((x>=block_min)&(x<=block_avg));
+           block(ind1) = 1-(block_avg-x(ind1))/(block_avg-block_min);
            
-           ind2 = find((x>=xmav)&(x<=xmax));
-           F(ind2) = 1-(x(ind2)-xmav)/(xmax-xmav);
+           ind2 = find((x>=block_avg)&(x<=block_max));
+           block(ind2) = 1-(x(ind2)-block_avg)/(block_max-block_avg);
        end
         
-       filtered(i-f,j-f,num) = sum(sum(F.*x))/sum(sum(F));
+       filtered(i-pad,j-pad,num) = sum(sum(block.*x))/sum(sum(block));
        clear xmax xmin xmav ind1 ind2;
    end
 end
 
 end
-filtered = filtered(1:m-2*f,1:n-2*f,:);
+filtered = filtered(1:m-2*pad,1:n-2*pad,:);
 end
 filtered =uint8(filtered);
 axes(handles.axesImage);
-f
 imshow(filtered)
 if(sze==3)
 axes(handles.axes2);
@@ -1176,7 +1175,8 @@ function colourNoiseSlider_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global originalImage sze  colour_slide luminance_slide;
-
+axes(handles.axesImage);
+imshow(originalImage)
 colour_slide = get(hObject,'Value');
 if(luminance_slide>0 && colour_slide>0)
 if(sze==3)
@@ -1240,7 +1240,8 @@ function luminanaceNoiseSlider_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global originalImage sze  colour_slide luminance_slide;
-
+axes(handles.axesImage);
+imshow(originalImage)
 luminance_slide = get(hObject,'Value')*10;
 if(luminance_slide>0 && colour_slide>0)
 if(sze==3)
@@ -1310,16 +1311,16 @@ estimated_noise  = get(hObject,'Value')/50;
 
 LEN = 21;
 THETA = 11;
-PSF = fspecial('motion', LEN, THETA);
+filter = fspecial('motion', LEN, THETA);
 
-wnr3 = deconvwnr(currentEditedImage, PSF, estimated_noise);
+weiner = deconvwnr(currentEditedImage, filter, estimated_noise);
 axes(handles.axesImage);
-imshow(wnr3)
+imshow(weiner)
 if(sze==3)
 axes(handles.axes2);
-[yRed, x] = imhist(wnr3(:,:,1));
-[yGreen, x] = imhist(wnr3(:,:,2));
-[yBlue, x] = imhist(wnr3(:,:,3));
+[yRed, x] = imhist(weiner(:,:,1));
+[yGreen, x] = imhist(weiner(:,:,2));
+[yBlue, x] = imhist(weiner(:,:,3));
 %Plot them together in one plot
 plot(x, yRed, 'Red', x, yGreen, 'Green', x, yBlue, 'Blue');
 set(handles.text10, 'String', 'Histogram');
