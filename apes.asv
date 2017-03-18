@@ -1286,14 +1286,13 @@ colour_slide = get(hObject,'Value');
         
         filtered = YCrCb_Image;
         
-        if(luminance_slide>0)
+        if(luminous_slide>0)
         filtered1 = YCrCb_Image(:,:,1);
         Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
         filtered1 =imfilter(filtered1,Gauss,'same');
         filtered(:,:,1) =filtered1;
         end
         
-        if(colour_slide>0)
         filtered2 = YCrCb_Image(:,:,2);
         filtered2 =medfilt2(filtered2,[num num]);
         filtered(:,:,2) =filtered2;
@@ -1301,13 +1300,13 @@ colour_slide = get(hObject,'Value');
         filtered3 = YCrCb_Image(:,:,3);
         filtered3 =medfilt2(filtered3,[num num]);
         filtered(:,:,3) =filtered3;
-        end
+        
         final = ycbcr2rgb(filtered);
         axes(handles.axesImage);
         imshow(final)
         histrogramUpdate(handles, final);
     end
-
+end
 if (sze<3)
     msgbox(sprintf('This function is applicable only for coloured images'),'Error','Error');
     return
