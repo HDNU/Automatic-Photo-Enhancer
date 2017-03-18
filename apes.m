@@ -180,29 +180,33 @@ function expostureAdjustSlider_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage sze;
 val = get(hObject,'Value');
-filtered1 = currentEditedImage(:,:,1);
-gamma = 0.9 + val/5;
-
-c = 1/(1.0^gamma);
-
-filtered1 =255.0*c*((filtered1/255.0).^gamma);
+% filtered1 = currentEditedImage(:,:,1);
+% gamma = 0.9 + val/5;
+% 
+% c = 1/(1.0^gamma);
+% 
+% filtered1 =255.0*c*((filtered1/255.0).^gamma);
+% 
+% filtered = currentEditedImage;
+% filtered(:,:,1) =filtered1;
+% if(sze==3)
+%     filtered2 = currentEditedImage(:,:,2);
+%     filtered3 = currentEditedImage(:,:,3);
+%     
+%     filtered2 =255.0*c*((filtered2/255.0).^gamma);
+%     filtered3 =255.0*c*((filtered3/255.0).^gamma);
+%     
+%     
+%     filtered(:,:,2) =filtered2;
+%     filtered(:,:,3) =filtered3;
+% end
 
 filtered = currentEditedImage;
-filtered(:,:,1) =filtered1;
-if(sze==3)
-    filtered2 = currentEditedImage(:,:,2);
-    filtered3 = currentEditedImage(:,:,3);
-    
-    filtered2 =255.0*c*((filtered2/255.0).^gamma);
-    filtered3 =255.0*c*((filtered3/255.0).^gamma);
-    
-    
-    filtered(:,:,2) =filtered2;
-    filtered(:,:,3) =filtered3;
-end
-currentEditedImage = filtered;
+filtered=filtered*exp(-0.0205)*2^((0.4385/log(2))*val);
+
+% currentEditedImage = filtered;
 axes(handles.axesImage);
-imshow(currentEditedImage);
+imshow(filtered);
 
 histrogramUpdate(handles, filtered);
 % Hints: get(hObject,'Value') returns position of slider
