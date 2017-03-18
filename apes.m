@@ -180,26 +180,7 @@ function expostureAdjustSlider_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage sze;
 val = get(hObject,'Value');
-% filtered1 = currentEditedImage(:,:,1);
-% gamma = 0.9 + val/5;
-% 
-% c = 1/(1.0^gamma);
-% 
-% filtered1 =255.0*c*((filtered1/255.0).^gamma);
-% 
-% filtered = currentEditedImage;
-% filtered(:,:,1) =filtered1;
-% if(sze==3)
-%     filtered2 = currentEditedImage(:,:,2);
-%     filtered3 = currentEditedImage(:,:,3);
-%     
-%     filtered2 =255.0*c*((filtered2/255.0).^gamma);
-%     filtered3 =255.0*c*((filtered3/255.0).^gamma);
-%     
-%     
-%     filtered(:,:,2) =filtered2;
-%     filtered(:,:,3) =filtered3;
-% end
+set(handles.text44, 'String',val);
 
 filtered = currentEditedImage;
 filtered=filtered*exp(-0.0205)*2^((0.4385/log(2))*val);
@@ -1386,6 +1367,40 @@ end
 % --- Executes during object creation, after setting all properties.
 function sharpenSlider_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to sharpenSlider (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function temperatureAdjustSlider_Callback(hObject, eventdata, handles)
+% hObject    handle to temperatureAdjustSlider (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global currentEditedImage sze;
+if(sze==3)
+set_temp = get(hObject,'Value')/500;
+filtered=currentEditedImage;
+filtered(:,:,1)=currentEditedImage(:,:,1)+set_temp;
+filtered(:,:,3)=currentEditedImage(:,:,3)-set_temp;
+
+axes(handles.axesImage);
+imshow(filtered)
+
+
+    histrogramUpdate(handles, filtered);
+end
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function temperatureAdjustSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to temperatureAdjustSlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
