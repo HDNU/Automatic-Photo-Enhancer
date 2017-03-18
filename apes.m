@@ -103,8 +103,8 @@ if (length(sze)==2)
 end
 sze = sze(3);
 axes(handles.axesImage);
-
 imshow(currentEditedImage);
+
 size2 = size(currentEditedImage);
 if (length(size2)==2)
     size2=[size2,1];
@@ -142,6 +142,19 @@ if (size2(1,3)==3)
     
     histrogramUpdate(handles, currentEditedImage);
 end
+
+set(handles.vignetteAmountSlider, 'value', 0.5);
+set(handles.vignetteMidpointSlider, 'value', 0.5);
+set(handles.vignetteFeatherSlider, 'value', 0.5);
+set(handles.gaussianSlider, 'value', 0.0);
+set(handles.wienerSlider, 'value', 0.0);
+set(handles.medianSlider, 'value', 0.0);
+set(handles.fuzzySlider, 'value', 0.0);
+set(handles.colourNoiseSlider, 'value', 0.0);
+set(handles.luminanaceNoiseSlider, 'value', 0.0);
+set(handles.blurRemovalSlider, 'value', 0.0);
+set(handles.sharpenSlider, 'value', 0.0);
+set(handles.shadowRecoSlider, 'value', 0.0);
 
 
 
@@ -509,6 +522,18 @@ histrogramUpdate(handles, currentEditedImage);
 clearPushButton(handles);
 set(handles.Default,'Value',1);
 
+set(handles.vignetteAmountSlider, 'value', 0.5);
+set(handles.vignetteMidpointSlider, 'value', 0.5);
+set(handles.vignetteFeatherSlider, 'value', 0.5);
+set(handles.gaussianSlider, 'value', 0.0);
+set(handles.wienerSlider, 'value', 0.0);
+set(handles.medianSlider, 'value', 0.0);
+set(handles.fuzzySlider, 'value', 0.0);
+set(handles.colourNoiseSlider, 'value', 0.0);
+set(handles.luminanaceNoiseSlider, 'value', 0.0);
+set(handles.blurRemovalSlider, 'value', 0.0);
+set(handles.sharpenSlider, 'value', 0.0);
+set(handles.shadowRecoSlider, 'value', 0.0);
 
 
 
