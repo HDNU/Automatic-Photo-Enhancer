@@ -433,6 +433,9 @@ imshow(currentEditedImage);
 currentEditedImage = im2double(currentEditedImage);
 histrogramUpdate(handles, currentEditedImage);
 
+% set default in color profile option
+clearPushButton(handles);
+set(handles.Default,'Value',1);
 
 
 
@@ -717,7 +720,7 @@ if get(hObject,'Value')
         axes(handles.axesImage);
         imshow(i2);
         currentEditedImage=i2;
-        histrogramUpdate(handles, currentEditedImage);
+%         histrogramUpdate(handles, currentEditedImage);
     catch
         uiwait(msgbox('This conversion is not valid','Error'));
         
@@ -942,8 +945,9 @@ else
     axes(handles.axesImage);
     imshow(FinalImage);
     
-    histrogramUpdate(handles, FinalImage);
+    
 end
+ histrogramUpdate(handles, FinalImage);
 
 % --- Executes during object creation, after setting all properties.
 function shadowRecoSlider_CreateFcn(hObject, eventdata, handles)
@@ -1061,7 +1065,7 @@ if(val>0)
     filtered1 =medfilt2(filtered1,[num num]);
     
     
-    filtered(:,:,1) =filtered1;
+    filtered =filtered1;
     if(sze==3)
         filtered2 = currentEditedImage(:,:,2);
         filtered3 = currentEditedImage(:,:,3);
@@ -1069,8 +1073,7 @@ if(val>0)
         filtered2 =medfilt2(filtered2,[num num]);
         filtered3 =medfilt2(filtered3,[num num]);
         
-        filtered(:,:,2) =filtered2;
-        filtered(:,:,3) =filtered3;
+        filtered =cat(3,filtered1,filtered2,filtered3);
     end
 end
 axes(handles.axesImage);

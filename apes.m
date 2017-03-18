@@ -1023,12 +1023,16 @@ global  originalImage sze;
 Kernel_Size = ceil(get(hObject,'Value')*10+1);
 filtered = originalImage;
 if(Kernel_Size>1)
-    filtered(:,:,1) = wiener2(originalImage(:,:,1),[Kernel_Size Kernel_Size]);
-    
-    if(sze==3)
-        filtered(:,:,2) = wiener2(originalImage(:,:,2),[Kernel_Size Kernel_Size]);
-        filtered(:,:,3) = wiener2(originalImage(:,:,3),[Kernel_Size Kernel_Size]);
+    filtered1 = wiener2(originalImage(:,:,1),[Kernel_Size Kernel_Size]);
+    if(sze==1)
+        filtered =filtered1;
     end
+    if(sze==3)
+        filtered2 = wiener2(originalImage(:,:,2),[Kernel_Size Kernel_Size]);
+        filtered3 = wiener2(originalImage(:,:,3),[Kernel_Size Kernel_Size]);
+        filtered =cat(3,filtered1,filtered2,filtered3);
+    end
+    
 end
 axes(handles.axesImage);
 imshow(filtered);
@@ -1065,7 +1069,7 @@ if(val>0)
     filtered1 =medfilt2(filtered1,[num num]);
     
     
-    filtered(:,:,1) =filtered1;
+    filtered =filtered1;
     if(sze==3)
         filtered2 = currentEditedImage(:,:,2);
         filtered3 = currentEditedImage(:,:,3);
@@ -1073,8 +1077,7 @@ if(val>0)
         filtered2 =medfilt2(filtered2,[num num]);
         filtered3 =medfilt2(filtered3,[num num]);
         
-        filtered(:,:,2) =filtered2;
-        filtered(:,:,3) =filtered3;
+        filtered =cat(3,filtered1,filtered2,filtered3);
     end
 end
 axes(handles.axesImage);
