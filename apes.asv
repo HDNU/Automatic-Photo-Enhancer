@@ -439,7 +439,7 @@ function undoLastEditPushbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to undoLastEditPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global cure
+global currentEditedImage;
 histrogramUpdate(handles, currentEditedImage);
 
 
@@ -565,13 +565,16 @@ hcsc = vision.ColorSpaceConverter;
 if get(hObject,'Value')
     clearPushButton(handles);
     set(handles.Lab_to_sRGB,'Value',1);
-   
+   try
         hcsc.Conversion = 'L*a*b* to sRGB';
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
         
-    
+   catch
+       uiwait(msgbox('This conversion is not valid','Error'));
+   end
+    currentEditedImage
 else
     
 end

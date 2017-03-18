@@ -570,11 +570,14 @@ if get(hObject,'Value')
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
+         currentEditedImage=i2;
+    histrogramUpdate(handles, currentEditedImage);
         
    catch
        uiwait(msgbox('This conversion is not valid','Error'));
    end
    
+
 else
     
 end
@@ -599,6 +602,8 @@ if get(hObject,'Value')
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
+         currentEditedImage=i2;
+    histrogramUpdate(handles, currentEditedImage);
     catch
         uiwait(msgbox('This conversion is not valid','Error'));
         
@@ -627,6 +632,8 @@ if get(hObject,'Value')
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
+         currentEditedImage=i2;
+    histrogramUpdate(handles, currentEditedImage);
     catch
         uiwait(msgbox('This conversion is not valid','Error'));
         
@@ -655,6 +662,8 @@ if get(hObject,'Value')
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
+         currentEditedImage=i2;
+    histrogramUpdate(handles, currentEditedImage);
     catch
         uiwait(msgbox('This conversion is not valid','Error'));
         
@@ -676,6 +685,7 @@ axes(handles.axesImage);
 imshow(currentEditedImage);
 clearPushButton(handles);
 set(handles.Default,'Value',1);
+    histrogramUpdate(handles, currentEditedImage);
 
 
 % --- Executes on button press in RGB_to_intensity.
@@ -698,6 +708,8 @@ if get(hObject,'Value')
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
+         currentEditedImage=i2;
+    histrogramUpdate(handles, currentEditedImage);
     catch
         uiwait(msgbox('This conversion is not valid','Error'));
         
@@ -727,6 +739,8 @@ if get(hObject,'Value')
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
+         currentEditedImage=i2;
+    histrogramUpdate(handles, currentEditedImage);
     catch
         uiwait(msgbox('This conversion is not valid','Error'));
         
@@ -755,6 +769,8 @@ if get(hObject,'Value')
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
+         currentEditedImage=i2;
+    histrogramUpdate(handles, currentEditedImage);
     catch
         uiwait(msgbox('This conversion is not valid','Error'));
         
@@ -782,6 +798,8 @@ if get(hObject,'Value')
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
+         currentEditedImage=i2;
+    histrogramUpdate(handles, currentEditedImage);
     catch
         uiwait(msgbox('This conversion is not valid','Error'));
         
@@ -812,6 +830,8 @@ if get(hObject,'Value')
         i2 = step(hcsc, i1);
         axes(handles.axesImage);
         imshow(i2);
+         currentEditedImage=i2;
+    histrogramUpdate(handles, currentEditedImage);
     catch
         uiwait(msgbox('This conversion is not valid','Error'));
         
@@ -909,6 +929,8 @@ FinalImage= currentEditedImage.*ScaleImage;
 
 axes(handles.axesImage);
 imshow(FinalImage);
+
+    histrogramUpdate(handles, FinalImage);
 end
 
 % --- Executes during object creation, after setting all properties.
