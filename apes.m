@@ -84,7 +84,7 @@ function selectPicturePushbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to selectPicturePushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global currentEditedImage originalImage hueImage satImage colour_slide luminance_slide;
+global currentEditedImage originalImage hueImage satImage colour_slide luminance_slide fuzzyImage;
 global path sze;
 colour_slide =0;
 luminance_slide=0;
@@ -95,6 +95,7 @@ if Cancel
     return
 end
 currentEditedImage = imread(path);
+fuzzyImage = currentEditedImage;
 currentEditedImage = im2double(currentEditedImage);
 originalImage = currentEditedImage;
 sze = size(currentEditedImage);
@@ -1203,9 +1204,9 @@ function fuzzySlider_Callback(hObject, eventdata, handles)
 % hObject    handle to fuzzySlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global sze originalImage
+global sze fuzzyImage
 h = ceil(get(hObject,'Value')*10 +2);
-filtered  = zeros(size(originalImage));
+filtered  = zeros(size(fuzzyImage));
 if(h>0)
     condition = mod(h,2);
     if(condition==0)
@@ -1217,8 +1218,8 @@ if(h>0)
         pad=(h-1)/2 ;   % padding value for window: f=1; f=2; f=3; f=4; f=5;
         
         block = zeros(h*h,1);
-        Image = double(padarray(originalImage(:,:,num),[pad pad],'symmetric'));
-        [m n ~] = size(originalImage(:,:,num));
+        Image = double(padarray(fuzzyImage(:,:,num),[pad pad],'symmetric'));
+        [m n ~] = size(fuzzyImage(:,:,num));
         for i=1+pad:1:m-pad
             for j=1+pad:1:n-pad
                 x=reshape(Image(i-pad:i+pad, j-pad:j+pad),[],1);
