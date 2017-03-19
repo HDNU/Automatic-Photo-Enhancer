@@ -84,7 +84,7 @@ function selectPicturePushbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to selectPicturePushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global currentEditedImage originalImage hueImage satImage colour_slide luminance_slide;
+global currentEditedImage originalImage hueImage satImage colour_slide luminance_slide fuzzyImage;
 global path sze;
 colour_slide =0;
 luminance_slide=0;
@@ -95,7 +95,7 @@ if Cancel
     return
 end
 currentEditedImage = imread(path);
-fuzzyImage 
+fuzzyImage = currentEditedImage;
 currentEditedImage = im2double(currentEditedImage);
 originalImage = currentEditedImage;
 sze = size(currentEditedImage);
@@ -1163,8 +1163,8 @@ val = get(hObject,'Value');
 filtered = currentEditedImage;
 if(val>0)
     filtered1 = currentEditedImage(:,:,1);
-    num =int64(val*10)+1;
-    filtered1 =medfilt2(filtered1,[num num]);
+    kernel_size =int64(val*10)+1
+    filtered1 =medfilt2(filtered1,[kernel_size kernel_size]);
     
     
     filtered =filtered1;
@@ -1172,8 +1172,8 @@ if(val>0)
         filtered2 = currentEditedImage(:,:,2);
         filtered3 = currentEditedImage(:,:,3);
         
-        filtered2 =medfilt2(filtered2,[num num]);
-        filtered3 =medfilt2(filtered3,[num num]);
+        filtered2 =medfilt2(filtered2,[kernel_size kernel_size]);
+        filtered3 =medfilt2(filtered3,[kernel_size kernel_size]);
         
         filtered =cat(3,filtered1,filtered2,filtered3);
     end
@@ -1204,11 +1204,11 @@ function fuzzySlider_Callback(hObject, eventdata, handles)
 % hObject    handle to fuzzySlider (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global sze originalImage
-h = ceil(get(hObject,'Value')*10 +2);
-filtered  = zeros(size(originalImage));
+global sze fuzzyImage
+h = ceil(get(hObject,'Value')*10);%user input
+filtered  = zeros(size(fuzzyImage));
 if(h>0)
-    condition = mod(h,2);
+    condition = mod(h,2);%check whether kernel size is even
     if(condition==0)
         h=h+1;
     end
@@ -1218,8 +1218,8 @@ if(h>0)
         pad=(h-1)/2 ;   % padding value for window: f=1; f=2; f=3; f=4; f=5;
         
         block = zeros(h*h,1);
-        Image = double(padarray(originalImage(:,:,num),[pad pad],'symmetric'));
-        [m n ~] = size(originalImage(:,:,num));
+        Image = double(padarray(fuzzyImage(:,:,num),[pad pad],'symmetric'));
+        [m n ~] = size(fuzzyImage(:,:,num));
         for i=1+pad:1:m-pad
             for j=1+pad:1:n-pad
                 x=reshape(Image(i-pad:i+pad, j-pad:j+pad),[],1);
@@ -1247,6 +1247,7 @@ if(h>0)
     filtered = filtered(1:m-2*pad,1:n-2*pad,:);
 end
 filtered =uint8(filtered);
+pad
 axes(handles.axesImage);
 imshow(filtered)
 if(sze==3)
@@ -1281,28 +1282,37 @@ colour_slide = get(hObject,'Value');
     if(sze==3)
         YCrCb_Image = rgb2ycbcr(originalImage);
         
-        num =ceil(colour_slide *10)+1;
+        kernel_Size =ceil(colour_slide *30)+1;
         sigma =(luminance_slide)+1;
         ker_size =ceil(3*sigma);
         
         filtered = YCrCb_Image;
+        ker =max(kernel_Size,ker_size);
+        pad=(ker-1)/2 ;   % padding value for window: f=1; f=2; f=3; f=4; f=5;
         
+        filtered1 = padarray(YCrCb_Image(:,:,1),[pad pad],'symmetric');
+        filtered2 = padarray(YCrCb_Image(:,:,2),[pad pad],'symmetric');
+        filtered3 = padarray(YCrCb_Image(:,:,3),[pad pad],'symmetric');
+        [row col] =size(filtered1);
         if(luminance_slide>0)
-        filtered1 = YCrCb_Image(:,:,1);
+       
         Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
         filtered1 =imfilter(filtered1,Gauss,'same');
-        filtered(:,:,1) =filtered1;
+       
         end
         
         if(colour_slide>0)
-        filtered2 = YCrCb_Image(:,:,2);
-        filtered2 =medfilt2(filtered2,[num num]);
-        filtered(:,:,2) =filtered2;
         
-        filtered3 = YCrCb_Image(:,:,3);
-        filtered3 =medfilt2(filtered3,[num num]);
-        filtered(:,:,3) =filtered3;
+        filtered2 =medfilt2(filtered2,[kernel_Size kernel_Size]); 
+        
+      
+        filtered3 =medfilt2(filtered3,[kernel_Size kernel_Size]);
+        
         end
+        filtered1 = filtered1(1+pad:row-pad,1+pad:col-pad);
+        filtered2 = filtered2(1+pad:row-pad,1+pad:col-pad);
+        filtered3 = filtered3(1+pad:row-pad,1+pad:col-pad);
+        filtered=ca
         final = ycbcr2rgb(filtered);
         axes(handles.axesImage);
         imshow(final)
