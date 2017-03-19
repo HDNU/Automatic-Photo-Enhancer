@@ -1476,6 +1476,7 @@ function slider46_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+global currentEditedImage sze;
 
 if(sze==3)
  set_temp = get(hObject,'Value')/500;
@@ -1487,7 +1488,7 @@ if(sze==3)
  imshow(filtered)
  
  
-     histrogramUpdate(handles, filtered);
+ histrogramUpdate(handles, filtered);
  end
 
 % --- Executes during object creation, after setting all properties.
@@ -1500,3 +1501,36 @@ function slider46_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+
+
+% --- Executes during object creation, after setting all properties.
+function cropPushbutton_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to cropPushbutton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes on mouse press over axes background.
+function axesImage_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to axesImage (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton22.
+function pushbutton22_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton22 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global currentEditedImage sze;
+
+axes(handles.axesImage);
+[x,y]=ginput(1);
+RGB=currentEditedImage(floor(x),floor(y),:);
+r=RGB(1);
+g=RGB(2);
+b=RGB(3);
+
+filtered = currentEditedImage;
+filter
+

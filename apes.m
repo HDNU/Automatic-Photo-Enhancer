@@ -1501,3 +1501,44 @@ function slider46_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+
+
+% --- Executes during object creation, after setting all properties.
+function cropPushbutton_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to cropPushbutton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- Executes on mouse press over axes background.
+function axesImage_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to axesImage (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in pushbutton22.
+function pushbutton22_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton22 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global currentEditedImage sze;
+
+axes(handles.axesImage);
+[x,y]=ginput(1);
+RGB=currentEditedImage(floor(y),floor(x),:);
+r=RGB(1);
+g=RGB(2);
+b=RGB(3);
+m=max([r,g,b]);
+r=r/m;
+g=g/m;
+b=b/m;
+
+filtered = currentEditedImage;
+filtered(:,:,1)=filtered(:,:,1)/r;
+filtered(:,:,2)=filtered(:,:,2)/g;
+filtered(:,:,3)=filtered(:,:,3)/b;
+
+imshow(filtered)
+histrogramUpdate(handles, filtered);
