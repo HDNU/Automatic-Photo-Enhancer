@@ -195,31 +195,12 @@ function expostureAdjustSlider_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage sze;
 val = get(hObject,'Value');
-% filtered1 = currentEditedImage(:,:,1);
-% gamma = 0.9 + val/5;
-% 
-% c = 1/(1.0^gamma);
-% 
-% filtered1 =255.0*c*((filtered1/255.0).^gamma);
-% 
-% filtered = currentEditedImage;
-% filtered(:,:,1) =filtered1;
-% if(sze==3)
-%     filtered2 = currentEditedImage(:,:,2);
-%     filtered3 = currentEditedImage(:,:,3);
-%     
-%     filtered2 =255.0*c*((filtered2/255.0).^gamma);
-%     filtered3 =255.0*c*((filtered3/255.0).^gamma);
-%     
-%     
-%     filtered(:,:,2) =filtered2;
-%     filtered(:,:,3) =filtered3;
-% end
 
 filtered = currentEditedImage;
 filtered=filtered*exp(-0.0205)*2^((0.4385/log(2))*val);
 
-% currentEditedImage = filtered;
+set(handles.text44,'string',val);
+
 axes(handles.axesImage);
 imshow(filtered);
 
@@ -1494,3 +1475,25 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
 end
 
 
+
+
+% --- Executes on slider movement.
+function slider46_Callback(hObject, eventdata, handles)
+% hObject    handle to slider46 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider46_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider46 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
