@@ -227,31 +227,22 @@ function contrastAdjustSlider_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global  currentEditedImage sze;
-C = (get(hObject,'Value')*256)-128;
+C = (get(hObject,'Value'));
 
-
-filtered1 = currentEditedImage(:,:,1);
-F =(259*(C+255))/(255*(259-C));
-
-filtered1 =uint8(F*(filtered1-128)+128);
 filtered = currentEditedImage;
-filtered(:,:,1) =filtered1;
+F =2^(C+1)-1;
+
+filtered(:,:,1) =F*(filtered(:,:,1)-0.5)+0.5;
+
 if(sze==3)
-    filtered2 = currentEditedImage(:,:,2);
-    filtered3 = currentEditedImage(:,:,3);
     
-    
-    filtered2 =uint8(F*(filtered2-128)+128);
-    filtered3 =uint8(F*(filtered3-128)+128);
-    
-    
-    filtered(:,:,2) =filtered2;
-    filtered(:,:,3) =filtered3;
+    filtered(:,:,2) =F*(filtered(:,:,2)-0.5)+0.5;
+    filtered(:,:,3) =F*(filtered(:,:,3)-0.5)+0.5;
+
 end
 
-currentEditedImage = filtered;
 axes(handles.axesImage);
-imshow(currentEditedImage);
+imshow(filtered);
 
 histrogramUpdate(handles, currentEditedImage);
 % Hints: get(hObject,'Value') returns position of slider
