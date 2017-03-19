@@ -53,10 +53,9 @@ function apes_OpeningFcn(hObject, eventdata, handles, varargin)
 I = imread('default.jpg');
 axes(handles.axesImage);
 imshow(I);
-global vignetteAmount vignetteMidpoint vignetteFeather;
+global vignetteAmount vignetteMidpoint;
 vignetteAmount = 0;
 vignetteMidpoint = 0.5;
-vignetteFeather = 0.5;
 
 % Choose default command line output for apes
 handles.output = hObject;
@@ -103,8 +102,8 @@ if (length(sze)==2)
 end
 sze = sze(3);
 axes(handles.axesImage);
-imshow(currentEditedImage);
 
+imshow(currentEditedImage);
 size2 = size(currentEditedImage);
 if (length(size2)==2)
     size2=[size2,1];
@@ -142,19 +141,6 @@ if (size2(1,3)==3)
     
     histrogramUpdate(handles, currentEditedImage);
 end
-
-set(handles.vignetteAmountSlider, 'value', 0.5);
-set(handles.vignetteMidpointSlider, 'value', 0.5);
-set(handles.vignetteFeatherSlider, 'value', 0.5);
-set(handles.gaussianSlider, 'value', 0.0);
-set(handles.wienerSlider, 'value', 0.0);
-set(handles.medianSlider, 'value', 0.0);
-set(handles.fuzzySlider, 'value', 0.0);
-set(handles.colourNoiseSlider, 'value', 0.0);
-set(handles.luminanaceNoiseSlider, 'value', 0.0);
-set(handles.blurRemovalSlider, 'value', 0.0);
-set(handles.sharpenSlider, 'value', 0.0);
-set(handles.shadowRecoSlider, 'value', 0.0);
 
 
 
@@ -194,26 +180,7 @@ function expostureAdjustSlider_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 global currentEditedImage sze;
 val = get(hObject,'Value');
-% filtered1 = currentEditedImage(:,:,1);
-% gamma = 0.9 + val/5;
-% 
-% c = 1/(1.0^gamma);
-% 
-% filtered1 =255.0*c*((filtered1/255.0).^gamma);
-% 
-% filtered = currentEditedImage;
-% filtered(:,:,1) =filtered1;
-% if(sze==3)
-%     filtered2 = currentEditedImage(:,:,2);
-%     filtered3 = currentEditedImage(:,:,3);
-%     
-%     filtered2 =255.0*c*((filtered2/255.0).^gamma);
-%     filtered3 =255.0*c*((filtered3/255.0).^gamma);
-%     
-%     
-%     filtered(:,:,2) =filtered2;
-%     filtered(:,:,3) =filtered3;
-% end
+set(handles.text44, 'String',val);
 
 filtered = currentEditedImage;
 filtered=filtered*exp(-0.0205)*2^((0.4385/log(2))*val);
@@ -245,33 +212,34 @@ function contrastAdjustSlider_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global  currentEditedImage sze;
-C = (get(hObject,'Value')*256)-128;
+C = (get(hObject,'Value'));
 
-
-filtered1 = currentEditedImage(:,:,1);
-F =(259*(C+255))/(255*(259-C));
-
-filtered1 =uint8(F*(filtered1-128)+128);
-filtered = currentEditedImage;
-filtered(:,:,1) =filtered1;
+filtered = (currentEditedImage);
+whos
+max(max(max(filtered)))
+% filtered1 = filtered(:,:,1);
+F =2^(C+1)-1
+filtered(:,:,1) =uint8(F*((filtered(:,:,1))-0.5)+0.5);
+% filtered(:,:,1) =filtered1;
 if(sze==3)
-    filtered2 = currentEditedImage(:,:,2);
-    filtered3 = currentEditedImage(:,:,3);
+%     filtered2 = filtered(:,:,2);
+%     filtered3 = filtered(:,:,3);
+    
+    filtered(:,:,2) =uint8(F*(double(filtered(:,:,2))-0.5)+0.5);
+    filtered(:,:,3) =uint8(F*(double(filtered(:,:,3))-0.5)+0.5);
+
     
     
-    filtered2 =uint8(F*(filtered2-128)+128);
-    filtered3 =uint8(F*(filtered3-128)+128);
     
-    
-    filtered(:,:,2) =filtered2;
-    filtered(:,:,3) =filtered3;
+%     filtered(:,:,2) =filtered2;
+%     filtered(:,:,3) =filtered3;
 end
 
-currentEditedImage = filtered;
+% currentEditedImage = filtered;
 axes(handles.axesImage);
-imshow(currentEditedImage);
+imshow(filtered);
 
-histrogramUpdate(handles, currentEditedImage);
+histrogramUpdate(handles, filtered);
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 
@@ -344,7 +312,7 @@ function vignetteAmountSlider_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-global currentEditedImage vignetteAmount vignetteMidpoint vignetteImage vignetteFeather;
+global currentEditedImage vignetteAmount vignetteMidpoint vignetteImage;
 vignetteAmount = 2*get(hObject,'Value')-1;
 [nr, nc, nChannels]=size(currentEditedImage);
 cx=ceil(nc/2);
@@ -361,9 +329,9 @@ for k = 1:nChannels
             if(distanceFromCenter>radius)
                 scale= abs(vignetteAmount*(distanceFromCenter-radius)/maxDistance);
                 if (vignetteAmount<0)
-                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)*(1-scale)-vignetteFeather*2*scale;
+                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)*(1-scale)-5*scale;
                 else
-                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)/(1-scale)+vignetteFeather*2*scale;
+                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)/(1-scale)+ 5*scale;
                 end
             end
         end
@@ -395,7 +363,7 @@ function vignetteMidpointSlider_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-global currentEditedImage vignetteAmount vignetteMidpoint vignetteImage vignetteFeather;
+global currentEditedImage vignetteAmount vignetteMidpoint vignetteImage;
 vignetteMidpoint = get(hObject,'Value');
 [nr, nc, nChannels]=size(currentEditedImage);
 cx=ceil(nc/2);
@@ -412,9 +380,9 @@ for k = 1:nChannels
             if(distanceFromCenter>radius)
                 scale= abs(vignetteAmount*(distanceFromCenter-radius)/maxDistance);
                 if (vignetteAmount<0)
-                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)*(1-scale)-vignetteFeather*2*scale;
+                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)*(1-scale)-5*scale;
                 else
-                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)/(1-scale)+vignetteFeather*2*scale;
+                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)/(1-scale)+5*scale;
                 end
             end
         end
@@ -438,58 +406,6 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
 end
 
 
-
-% --- Executes on slider movement.
-function vignetteFeatherSlider_Callback(hObject, eventdata, handles)
-% hObject    handle to vignetteFeatherSlider (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'Value') returns position of slider
-%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-global currentEditedImage vignetteAmount vignetteMidpoint vignetteImage vignetteFeather;
-vignetteFeather = -1*get(hObject,'Value')+1;
-[nr, nc, nChannels]=size(currentEditedImage);
-cx=ceil(nc/2);
-cy=ceil(nr/2);
-
-radius = vignetteMidpoint*max(cx,cy);
-maxDistance = sqrt(cx.^2 + cy.^2)-radius;
-
-vignetteImage=currentEditedImage;
-for k = 1:nChannels
-    for i=1:nr
-        for j=1:nc
-            distanceFromCenter = sqrt((abs(i-cy).^2)+(abs(j-cx).^2));
-            if(distanceFromCenter>radius)
-                scale= abs(vignetteAmount*(distanceFromCenter-radius)/maxDistance);
-                if (vignetteAmount<0)
-                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)*(1-scale)-vignetteFeather*2*scale;
-                else
-                    vignetteImage(i,j,k)= currentEditedImage(i,j,k)/(1-scale)+vignetteFeather*2*scale;
-                end
-            end
-        end
-    end
-end
-% currentEditedImage = vignetteImage;
-axes(handles.axesImage);
-imshow(vignetteImage);
-histrogramUpdate(handles, vignetteImage);
-
-
-% --- Executes during object creation, after setting all properties.
-function vignetteFeatherSlider_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to vignetteFeatherSlider (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: slider controls usually have a light gray background.
-if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
-end
-
-
 % --- Executes on button press in vignetteDonePushbutton.
 function vignetteDonePushbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to vignetteDonePushbutton (see GCBO)
@@ -500,9 +416,6 @@ currentEditedImage = vignetteImage;
 axes(handles.axesImage);
 imshow(currentEditedImage);
 histrogramUpdate(handles, currentEditedImage);
-set(handles.vignetteAmountSlider, 'value', 0.5);
-set(handles.vignetteMidpointSlider, 'value', 0.5);
-set(handles.vignetteFeatherSlider, 'value', 0.5);
 
 
 
@@ -522,18 +435,6 @@ histrogramUpdate(handles, currentEditedImage);
 clearPushButton(handles);
 set(handles.Default,'Value',1);
 
-set(handles.vignetteAmountSlider, 'value', 0.5);
-set(handles.vignetteMidpointSlider, 'value', 0.5);
-set(handles.vignetteFeatherSlider, 'value', 0.5);
-set(handles.gaussianSlider, 'value', 0.0);
-set(handles.wienerSlider, 'value', 0.0);
-set(handles.medianSlider, 'value', 0.0);
-set(handles.fuzzySlider, 'value', 0.0);
-set(handles.colourNoiseSlider, 'value', 0.0);
-set(handles.luminanaceNoiseSlider, 'value', 0.0);
-set(handles.blurRemovalSlider, 'value', 0.0);
-set(handles.sharpenSlider, 'value', 0.0);
-set(handles.shadowRecoSlider, 'value', 0.0);
 
 
 
@@ -1286,13 +1187,14 @@ colour_slide = get(hObject,'Value');
         
         filtered = YCrCb_Image;
         
-        if(luminous_slide>0)
+        if(luminance_slide>0)
         filtered1 = YCrCb_Image(:,:,1);
         Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
         filtered1 =imfilter(filtered1,Gauss,'same');
         filtered(:,:,1) =filtered1;
         end
         
+        if(colour_slide>0)
         filtered2 = YCrCb_Image(:,:,2);
         filtered2 =medfilt2(filtered2,[num num]);
         filtered(:,:,2) =filtered2;
@@ -1300,13 +1202,13 @@ colour_slide = get(hObject,'Value');
         filtered3 = YCrCb_Image(:,:,3);
         filtered3 =medfilt2(filtered3,[num num]);
         filtered(:,:,3) =filtered3;
-        
+        end
         final = ycbcr2rgb(filtered);
         axes(handles.axesImage);
         imshow(final)
         histrogramUpdate(handles, final);
     end
-end
+
 if (sze<3)
     msgbox(sprintf('This function is applicable only for coloured images'),'Error','Error');
     return
@@ -1477,3 +1379,35 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
 end
 
 
+% --- Executes on slider movement.
+function temperatureAdjustSlider_Callback(hObject, eventdata, handles)
+% hObject    handle to temperatureAdjustSlider (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global currentEditedImage sze;
+if(sze==3)
+set_temp = get(hObject,'Value')/500;
+filtered=currentEditedImage;
+filtered(:,:,1)=currentEditedImage(:,:,1)+set_temp;
+filtered(:,:,3)=currentEditedImage(:,:,3)-set_temp;
+
+axes(handles.axesImage);
+imshow(filtered)
+
+
+    histrogramUpdate(handles, filtered);
+end
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function temperatureAdjustSlider_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to temperatureAdjustSlider (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
