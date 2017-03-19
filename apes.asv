@@ -1269,7 +1269,7 @@ colour_slide = get(hObject,'Value');
         end
         filtered = YCrCb_Image;
         ker =max(kernel_Size,ker_size);
-        pad=(ker-1)/2    % padding value for window
+        pad=(ker-1)/2 ;   % padding value for window: f=1; f=2; f=3; f=4; f=5;
         
         filtered1 = padarray(YCrCb_Image(:,:,1),[pad pad],'symmetric');
         filtered2 = padarray(YCrCb_Image(:,:,2),[pad pad],'symmetric');
@@ -1333,49 +1333,37 @@ luminance_slide = get(hObject,'Value')*10;
     if(sze==3)
         YCrCb_Image = rgb2ycbcr(originalImage);
         
-        kernel_Size =ceil(colour_slide*10)+1;
+        kernel_size =ceil(colour_slide*10)+1;
         sigma =(luminance_slide)+1;
         ker_size =ceil(3*sigma);
-        condition =mod(kernel_Size,2);
+        condition =mod(kernel_size,2);
         if(condition==0)
-            kernel_Size = kernel_Size+1;
+            kernel_size = kernel_size+1;
         end
-        condition = mod(ker_size,2);
+        condition = mode(ker_size,2);
         if(condition==0)
-            ker_size=ker_size+1;
+            ker_size=ker_size+1
         end
         
         filtered = YCrCb_Image;
-        ker =max(kernel_Size,ker_size);
-      
-        pad=(ker-1)/2   ; % padding value for window
-        filtered1 = padarray(YCrCb_Image(:,:,1),[pad pad],'symmetric');
-        filtered2 = padarray(YCrCb_Image(:,:,2),[pad pad],'symmetric');
-        filtered3 = padarray(YCrCb_Image(:,:,3),[pad pad],'symmetric');
-        [row col] =size(filtered1);
         if(luminance_slide>0)
-       
+        filtered1 = YCrCb_Image(:,:,1);
         Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
         filtered1 =imfilter(filtered1,Gauss,'same');
-       
+        filtered(:,:,1) =filtered1;
         end
-        
         if(colour_slide>0)
+        filtered2 = YCrCb_Image(:,:,2);
+        filtered2 =medfilt2(filtered2,[kernel_size kernel_size]);
+        filtered(:,:,2) =filtered2;
         
-        filtered2 =medfilt2(filtered2,[kernel_Size kernel_Size]); 
-        
-      
-        filtered3 =medfilt2(filtered3,[kernel_Size kernel_Size]);
-        
+        filtered3 = YCrCb_Image(:,:,3);
+        filtered3 =medfilt2(filtered3,[kernel_size kernel_size]);
+        filtered(:,:,3) =filtered3;
         end
-        filtered1 = filtered1(1+pad:row-pad,1+pad:col-pad);
-        filtered2 = filtered2(1+pad:row-pad,1+pad:col-pad);
-        filtered3 = filtered3(1+pad:row-pad,1+pad:col-pad);
-        filtered=cat(3,filtered1,filtered2,filtered3);
         final = ycbcr2rgb(filtered);
         axes(handles.axesImage);
         imshow(final)
-       
         
         histrogramUpdate(handles, final);
         
