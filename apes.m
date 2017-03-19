@@ -1536,6 +1536,7 @@ g=g/m;
 b=b/m;
 
 filtered = currentEditedImage;
+%%%%%%Diagonal matrix multiplication%%%%%%
 filtered(:,:,1)=filtered(:,:,1)/r;
 filtered(:,:,2)=filtered(:,:,2)/g;
 filtered(:,:,3)=filtered(:,:,3)/b;
