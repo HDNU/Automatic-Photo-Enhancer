@@ -604,7 +604,7 @@ x1=[0;1];
 y1=[0;1];
 vq1 = interp1(x1,y1,xq,'linear');
 plot (xq,vq1);
-for i=1:4
+for i=1:2
     [x y]=ginput(1);
     x1=[x1;x];
     y1=[y1;y];
