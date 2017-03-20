@@ -1581,3 +1581,20 @@ filtered(:,:,3)=filtered(:,:,3)/b;
 
 imshow(filtered)
 histrogramUpdate(handles, filtered);
+
+
+% --- Executes on button press in autoAdjust.
+function autoAdjust_Callback(hObject, eventdata, handles)
+% hObject    handle to autoAdjust (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global currentEditedImage;
+currentEditedImage=auto_tone_adjust(currentEditedImage);
+axes(handles.axesImage);
+imshow(currentEditedImage);
+histrogramUpdate(handles, currentEditedImage);
+
+
+
+
+
