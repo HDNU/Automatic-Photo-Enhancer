@@ -84,7 +84,7 @@ function selectPicturePushbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to selectPicturePushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global currentEditedImage originalImage hueImage satImage colour_slide luminance_slide fuzzyImage;
+global currentEditedImage originalImage hueImage satImage colour_slide luminance_slide fuzzyImage vignetteImage;
 global path sze;
 colour_slide =0;
 luminance_slide=0;
@@ -98,6 +98,7 @@ currentEditedImage = imread(path);
 fuzzyImage = currentEditedImage;
 currentEditedImage = im2double(currentEditedImage);
 originalImage = currentEditedImage;
+vignetteImage = currentEditedImage;
 sze = size(currentEditedImage);
 if (length(sze)==2)
     sze=[sze,1];
@@ -147,6 +148,9 @@ end
 set(handles.vignetteAmountSlider, 'value', 0.5);
 set(handles.vignetteMidpointSlider, 'value', 0.5);
 set(handles.vignetteFeatherSlider, 'value', 0.5);
+set(handles.vaText, 'String', 0);
+set(handles.vmText, 'String', 50);
+set(handles.vfText, 'String', 50);
 set(handles.gaussianSlider, 'value', 0.0);
 set(handles.wienerSlider, 'value', 0.0);
 set(handles.medianSlider, 'value', 0.0);
@@ -318,6 +322,7 @@ function vignetteAmountSlider_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 global currentEditedImage vignetteAmount vignetteMidpoint vignetteImage vignetteFeather;
+set(handles.vaText, 'String', floor(100*(2*get(hObject,'Value')-1)));
 vignetteAmount = 2*get(hObject,'Value')-1;
 [nr, nc, nChannels]=size(currentEditedImage);
 cx=ceil(nc/2);
@@ -1269,7 +1274,7 @@ colour_slide = get(hObject,'Value');
         end
         filtered = YCrCb_Image;
         ker =max(kernel_Size,ker_size);
-        pad=(ker-1)/2 ;   % padding value for window: f=1; f=2; f=3; f=4; f=5;
+        pad=(ker-1)/2    % padding value for window
         
         filtered1 = padarray(YCrCb_Image(:,:,1),[pad pad],'symmetric');
         filtered2 = padarray(YCrCb_Image(:,:,2),[pad pad],'symmetric');
@@ -1333,37 +1338,49 @@ luminance_slide = get(hObject,'Value')*10;
     if(sze==3)
         YCrCb_Image = rgb2ycbcr(originalImage);
         
-        kernel_size =ceil(colour_slide*10)+1;
+        kernel_Size =ceil(colour_slide*10)+1;
         sigma =(luminance_slide)+1;
         ker_size =ceil(3*sigma);
-        condition =mod(kernel_size,2);
+        condition =mod(kernel_Size,2);
         if(condition==0)
-            kernel_size = kernel_size+1;
+            kernel_Size = kernel_Size+1;
         end
-        condition = mode(ker_size,2);
+        condition = mod(ker_size,2);
         if(condition==0)
-            ker_size=ker_size+1
+            ker_size=ker_size+1;
         end
         
         filtered = YCrCb_Image;
+        ker =max(kernel_Size,ker_size);
+      
+        pad=(ker-1)/2   ; % padding value for window
+        filtered1 = padarray(YCrCb_Image(:,:,1),[pad pad],'symmetric');
+        filtered2 = padarray(YCrCb_Image(:,:,2),[pad pad],'symmetric');
+        filtered3 = padarray(YCrCb_Image(:,:,3),[pad pad],'symmetric');
+        [row col] =size(filtered1);
         if(luminance_slide>0)
-        filtered1 = YCrCb_Image(:,:,1);
+       
         Gauss =fspecial('gaussian',[ker_size ker_size],sigma);
         filtered1 =imfilter(filtered1,Gauss,'same');
-        filtered(:,:,1) =filtered1;
+       
         end
-        if(colour_slide>0)
-        filtered2 = YCrCb_Image(:,:,2);
-        filtered2 =medfilt2(filtered2,[kernel_size kernel_size]);
-        filtered(:,:,2) =filtered2;
         
-        filtered3 = YCrCb_Image(:,:,3);
-        filtered3 =medfilt2(filtered3,[kernel_size kernel_size]);
-        filtered(:,:,3) =filtered3;
+        if(colour_slide>0)
+        
+        filtered2 =medfilt2(filtered2,[kernel_Size kernel_Size]); 
+        
+      
+        filtered3 =medfilt2(filtered3,[kernel_Size kernel_Size]);
+        
         end
+        filtered1 = filtered1(1+pad:row-pad,1+pad:col-pad);
+        filtered2 = filtered2(1+pad:row-pad,1+pad:col-pad);
+        filtered3 = filtered3(1+pad:row-pad,1+pad:col-pad);
+        filtered=cat(3,filtered1,filtered2,filtered3);
         final = ycbcr2rgb(filtered);
         axes(handles.axesImage);
         imshow(final)
+       
         
         histrogramUpdate(handles, final);
         

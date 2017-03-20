@@ -84,7 +84,7 @@ function selectPicturePushbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to selectPicturePushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global currentEditedImage originalImage hueImage satImage colour_slide luminance_slide fuzzyImage;
+global currentEditedImage originalImage hueImage satImage colour_slide luminance_slide fuzzyImage vignetteImage;
 global path sze;
 colour_slide =0;
 luminance_slide=0;
@@ -98,6 +98,7 @@ currentEditedImage = imread(path);
 fuzzyImage = currentEditedImage;
 currentEditedImage = im2double(currentEditedImage);
 originalImage = currentEditedImage;
+vignetteImage = currentEditedImage;
 sze = size(currentEditedImage);
 if (length(sze)==2)
     sze=[sze,1];
@@ -147,6 +148,9 @@ end
 set(handles.vignetteAmountSlider, 'value', 0.5);
 set(handles.vignetteMidpointSlider, 'value', 0.5);
 set(handles.vignetteFeatherSlider, 'value', 0.5);
+set(handles.vaText, 'String', 0);
+set(handles.vmText, 'String', 50);
+set(handles.vfText, 'String', 50);
 set(handles.gaussianSlider, 'value', 0.0);
 set(handles.wienerSlider, 'value', 0.0);
 set(handles.medianSlider, 'value', 0.0);
@@ -318,6 +322,7 @@ function vignetteAmountSlider_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 global currentEditedImage vignetteAmount vignetteMidpoint vignetteImage vignetteFeather;
+set(handles.vaText, 'String', floor(100*(2*get(hObject,'Value')-1)));
 vignetteAmount = 2*get(hObject,'Value')-1;
 [nr, nc, nChannels]=size(currentEditedImage);
 cx=ceil(nc/2);
@@ -369,6 +374,7 @@ function vignetteMidpointSlider_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 global currentEditedImage vignetteAmount vignetteMidpoint vignetteImage vignetteFeather;
+set(handles.vmText, 'String', floor(100*get(hObject,'Value')));
 vignetteMidpoint = get(hObject,'Value');
 [nr, nc, nChannels]=size(currentEditedImage);
 cx=ceil(nc/2);
@@ -421,6 +427,7 @@ function vignetteFeatherSlider_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 global currentEditedImage vignetteAmount vignetteMidpoint vignetteImage vignetteFeather;
+set(handles.vfText, 'String', floor(100*get(hObject,'Value')));
 vignetteFeather = -1*get(hObject,'Value')+1;
 [nr, nc, nChannels]=size(currentEditedImage);
 cx=ceil(nc/2);
@@ -476,6 +483,9 @@ histrogramUpdate(handles, currentEditedImage);
 set(handles.vignetteAmountSlider, 'value', 0.5);
 set(handles.vignetteMidpointSlider, 'value', 0.5);
 set(handles.vignetteFeatherSlider, 'value', 0.5);
+set(handles.vaText, 'String', 0);
+set(handles.vmText, 'String', 50);
+set(handles.vfText, 'String', 50);
 
 
 
@@ -484,8 +494,9 @@ function rivert2OriginalPushbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to rivert2OriginalPushbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-global originalImage currentEditedImage;
+global originalImage currentEditedImage vignetteImage;
 currentEditedImage = originalImage;
+vignetteImage = currentEditedImage;
 axes(handles.axesImage);
 imshow(currentEditedImage);
 currentEditedImage = im2double(currentEditedImage);
@@ -498,6 +509,9 @@ set(handles.Default,'Value',1);
 set(handles.vignetteAmountSlider, 'value', 0.5);
 set(handles.vignetteMidpointSlider, 'value', 0.5);
 set(handles.vignetteFeatherSlider, 'value', 0.5);
+set(handles.vaText, 'String', 0);
+set(handles.vmText, 'String', 50);
+set(handles.vfText, 'String', 50);
 set(handles.gaussianSlider, 'value', 0.0);
 set(handles.wienerSlider, 'value', 0.0);
 set(handles.medianSlider, 'value', 0.0);
