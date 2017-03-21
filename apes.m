@@ -567,6 +567,7 @@ h = uicontrol('Style','text','String','Select the Mapping Region','Position',[22
     axes(handles.axesImage);
     imshow(ImageHSV1);
      delete(h);
+     currentEditedImage = ImageHSV1;
          histrogramUpdate(handles, currentEditedImage);
 
 else
@@ -603,7 +604,8 @@ if (size2(3)==3)
     axes(handles.axesImage);
     imshow(ImageHSV1);
     delete(h);
-         histrogramUpdate(handles, currentEditedImage);
+    currentEditedImage = ImageHSV1;
+    histrogramUpdate(handles, currentEditedImage);
 
 
 else
