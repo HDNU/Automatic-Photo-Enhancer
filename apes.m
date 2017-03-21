@@ -584,7 +584,7 @@ if (length(size2)==2)
     size2=[size2,1];
 end
 if (size2(3)==3)
-    h = uicontrol('Style','text','String','Select the Mapping Region','Position',[200 120 100 40]);
+    h = uicontrol('Style','text','String','Select the Mapping Region','Position',[220 120 200 40]);
 
      axes(handles.histrogramAreaAxes);
     imshow(currentEditedImage);
