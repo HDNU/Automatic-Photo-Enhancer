@@ -546,8 +546,11 @@ if (length(size2)==2)
     size2=[size2,1];
 end
 if (size2(3)==3)
-    
-    axes(handles.Hue);
+%     axes(handles.axesImage);
+%     imshow(currentEditedImage);
+h = uicontrol('Style','text','String','Select the Mapping Region','Position',[220 120 200 40]);
+
+     axes(handles.histrogramAreaAxes);
     imshow(hueImage);
     croppedImage = imcrop(hueImage);
     
@@ -560,10 +563,12 @@ if (size2(3)==3)
     ImageHSV1(:,:,2)=ImageHSV(:,:,2);
     ImageHSV1(:,:,3)=ImageHSV(:,:,3);
     
-    axes(handles.histrogramAreaAxes);
-    imshow(croppedImage);
+   ImageHSV1=hsv2rgb(ImageHSV1);
     axes(handles.axesImage);
     imshow(ImageHSV1);
+     delete(h);
+         histrogramUpdate(handles, currentEditedImage);
+
 else
     msgbox(sprintf('Input color Image'),'Error','Error');
 end
@@ -579,8 +584,10 @@ if (length(size2)==2)
     size2=[size2,1];
 end
 if (size2(3)==3)
-    axes(handles.Saturation);
-    imshow(satImage);
+    h = uicontrol('Style','text','String','Select the Mapping Region','Position',[200 120 100 40]);
+
+     axes(handles.histrogramAreaAxes);
+    imshow(currentEditedImage);
     croppedImage = imcrop(satImage);
     
     sze = size(croppedImage);
@@ -592,13 +599,17 @@ if (size2(3)==3)
     ImageHSV1(:,:,1)=ImageHSV(:,:,1);
     ImageHSV1(:,:,3)=ImageHSV(:,:,3);
     
-    axes(handles.histrogramAreaAxes);
-    imshow(croppedImage);
+   ImageHSV1=hsv2rgb(ImageHSV1);
     axes(handles.axesImage);
     imshow(ImageHSV1);
+    delete(h);
+         histrogramUpdate(handles, currentEditedImage);
+
+
 else
     msgbox(sprintf('Input color Image'),'Error','Error');
 end
+
 
 
 
